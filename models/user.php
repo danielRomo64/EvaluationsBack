@@ -75,11 +75,12 @@ class User {
         }
 
 
-        if ($rowCount > 0) {
-            return TRUE;
+        if ($rowCount->rowCount() > 0) {
+            return array("code" => 1, "message" => "Usuario Actualizado", "payload" => "") ;
+        }else{
+            http_response_code(404);
+            echo json_encode( array("code" => 0, "message" => "Usuario no actualizado", "payload" => ""));
         }
-
-        return FALSE;
     }
 
 }
