@@ -1,5 +1,6 @@
 <?php
 
+//hola
 class Connection
 {
     public function connect()

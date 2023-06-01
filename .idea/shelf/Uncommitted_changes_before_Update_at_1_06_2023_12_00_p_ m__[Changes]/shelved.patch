@@ -1,0 +1,120 @@
+Index: models/user.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?php\r\n\r\nrequire_once \"connection/Connection.php\";\r\nclass User {\r\n    public static function newUser($user_login, $user_pass, $user_email, $first_name, $last_name, $user_profile, $user_client) {\r\n        $connection = new Connection();\r\n        $db = $connection->connect();\r\n\r\n        $query = \"INSERT INTO user(user_login, user_pass, user_email, first_name, last_name, user_profile, user_client, user_status,user_registered) VALUES ('$user_login', '$user_pass', '$user_email', '$first_name', '$last_name', '$user_profile', '$user_client',1,CURTIME())\";\r\n\r\n        $statement = $db->prepare($query);\r\n        $statement->execute();\r\n\r\n        if ($statement->rowCount() > 0) {\r\n            return true;\r\n        }\r\n        return false;\r\n    }\r\n\r\n\r\n\r\n    public static function getAllUser($id_user = null ) {\r\n        $dbConnection = new Connection();\r\n        $db = $dbConnection->connect();\r\n        $dates = [];\r\n        $where = '';\r\n        if (isset($id_user)){\r\n            $where = \"WHERE U.id_user = \".$id_user;\r\n        }\r\n        if ($db) {\r\n            $query = $db->query(\"SELECT U.id_user, CONCAT(U.first_name,' ',U.last_name) AS name ,U.user_email, U.user_login,  if(u.user_status != 1, 'Desactivo', 'Activo') as states ,P.description AS profile, C.description AS client , U.user_registered\r\n                FROM user as U\r\n                INNER JOIN profiles as P on U.user_profile = P.id\r\n                INNER JOIN clients as C on U.user_client = C.id \".$where);\r\n            //print_r($query);\r\n            //exit();\r\n            if ($query) {\r\n                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {\r\n                    $dates[] = [\r\n                        'id_user' => $row['id_user'],\r\n                        'name' => $row['name'],\r\n                        'user_email' => $row['user_email'],\r\n                        'user_login' => $row['user_login'],\r\n                        'states' => $row['states'],\r\n                        'profile' => $row['profile'],\r\n                        'profile' => $row['profile'],\r\n                        'client' => $row['client']\r\n                    ];\r\n                }\r\n            }\r\n        }\r\n        return $dates;\r\n\r\n    }\r\n\r\n\r\n    public static function updateUser($id_user, $pruebaac)\r\n    {\r\n        $dbConnection = new Connection();\r\n        $db = $dbConnection->connect();\r\n\r\n        $query = \"UPDATE `user` SET user_login = '$pruebaac' WHERE `user`.id_user = $id_user\";\r\n        $statement = $db->prepare($query);\r\n        $statement->execute();\r\n\r\n        $rowCount = $statement->rowCount();\r\n\r\n        if ($rowCount > 0) {\r\n            return TRUE;\r\n        }\r\n\r\n        return FALSE;\r\n    }\r\n\r\n}\r\n\r\n\r\n\r\n\r\n/*\r\npublic static function updateUser($id_user, $pruebaac) {\r\n    $dbConnection = new PDO(\"mysql:host=localhost;dbname=nombre_base_de_datos\", \"usuario\", \"contraseña\");\r\n    // Reemplaza \"nombre_base_de_datos\", \"usuario\" y \"contraseña\" con los valores adecuados para tu base de datos\r\n\r\n    $query = \"UPDATE `user` SET user_login = :pruebaac WHERE id_user = :id_user\";\r\n    $statement = $dbConnection->prepare($query);\r\n    $statement->bindParam(':pruebaac', $pruebaac);\r\n    $statement->bindParam(':id_user', $id_user);\r\n    $statement->execute();\r\n\r\n    $rowCount = $statement->rowCount();\r\n\r\n    if($rowCount > 0) {\r\n        return TRUE;\r\n    }\r\n\r\n    return FALSE;\r\n}\r\n\r\n\r\n*/\r\n\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/models/user.php b/models/user.php
+--- a/models/user.php	(revision 62db8c1f3848896166e498102a4f4623fb7fae07)
++++ b/models/user.php	(date 1685638286847)
+@@ -1,5 +1,6 @@
+ <?php
+ 
++//hola
+ require_once "connection/Connection.php";
+ class User {
+     public static function newUser($user_login, $user_pass, $user_email, $first_name, $last_name, $user_profile, $user_client) {
+Index: index.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?php\r\n    require_once \"models/login.php\";\r\n    require_once \"models/user.php\";\r\n\r\n\r\n    switch ($_SERVER['REQUEST_METHOD']) {\r\n        case 'GET':\r\n            $json = file_get_contents('php://input');\r\n            $data = json_decode($json, true);\r\n            switch ($data['valid']){\r\n\r\n                default:\r\n                    http_response_code(405);\r\n\r\n            }\r\n            http_response_code(405);\r\n            break;\r\n\r\n        case 'POST':\r\n            $json = file_get_contents('php://input');\r\n            $data = json_decode($json, true);\r\n            switch ($data['valid']){\r\n\r\n                case 'login':\r\n                    echo json_encode(login::loginIn($data['user'],$data['pass']));\r\n                    http_response_code(200);\r\n                    break;\r\n                case 'newUser':\r\n                    echo json_encode(User::newUser($data['user_login'],$data['user_pass'],$data['user_email'],$data['first_name'],$data['last_name'],$data['user_profile'],$data['user_client']));\r\n                    http_response_code(200);\r\n                    break;\r\n                case 'allUser':\r\n                    echo json_encode(User::getAllUser());\r\n                    http_response_code(200);\r\n                    break;\r\n                case 'selectUser':\r\n                    echo json_encode(User::getAllUser($data['id_user']));\r\n                    http_response_code(200);\r\n                    break;\r\n                default:\r\n                    http_response_code(400);\r\n            }\r\n            http_response_code(405);\r\n            break;\r\n\r\n        case 'PUT':\r\n            $json = file_get_contents('php://input');\r\n            $data = json_decode($json, true);\r\n\r\n\r\n            switch ($data['valid']){\r\n\r\n                case 'updateUser':\r\n                     echo json_encode(User::updateUser($data['id_user'],$data['pruebaac']));\r\n                     http_response_code(200);\r\n                     break;\r\n\r\n                case 'deleteUser':\r\n                    //echo json_encode(User::updateUser($data['id_user'],$data['pruebaac']));\r\n                    http_response_code(200);\r\n                    break;\r\n                default:\r\n                    http_response_code(400);\r\n\r\n\r\n            }\r\n            break;\r\n            http_response_code(405);\r\n\r\n}\r\n//hik\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/index.php b/index.php
+--- a/index.php	(revision 62db8c1f3848896166e498102a4f4623fb7fae07)
++++ b/index.php	(date 1685638286854)
+@@ -1,4 +1,6 @@
+ <?php
++
++//hola
+     require_once "models/login.php";
+     require_once "models/user.php";
+ 
+Index: connection/connection.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?php\r\n\r\nclass Connection\r\n{\r\n    public function connect()\r\n    {\r\n        $opciones = [PDO::MYSQL_ATTR_INIT_COMMAND => \"SET NAMES utf8\"];\r\n        try {\r\n            $db = new PDO('mysql:host=localhost;dbname=evaluations', 'root', '', $opciones);\r\n            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);\r\n            return $db;\r\n        } catch (PDOException $e) {\r\n            echo 'Falló la conexión: ' . $e->getMessage();\r\n            return null;\r\n        }\r\n    }\r\n}\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/connection/connection.php b/connection/connection.php
+--- a/connection/connection.php	(revision 62db8c1f3848896166e498102a4f4623fb7fae07)
++++ b/connection/connection.php	(date 1685638286860)
+@@ -1,5 +1,6 @@
+ <?php
+ 
++//hola
+ class Connection
+ {
+     public function connect()
+Index: models/login.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?php\r\n\r\nrequire_once \"connection/Connection.php\";\r\nclass login {\r\n    public static function loginIn($user, $pass) {\r\n        $connection = new Connection();\r\n        $db = $connection->connect();\r\n\r\n        $query = \"SELECT U.id_user, U.first_name, U.last_name FROM user as U WHERE U.user_login = :user AND U.user_pass = :pass \";\r\n        $statement = $db->prepare($query);\r\n        $statement->bindParam(':user', $user);\r\n        $statement->bindParam(':pass', $pass);\r\n\r\n        $statement->execute();\r\n\r\n        $state = self::getStatus($user);\r\n        //echo $state;\r\n        if ($state['user_status'] == 1) {\r\n            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {\r\n                $dates[] = [\r\n                    'id_user' => $row['id_user'],\r\n                    'first_name' => $row['first_name'],\r\n                    'last_name' => $row['last_name']\r\n                ];\r\n            }\r\n        } else {\r\n            $dates[] = ['user' => ['not found']];\r\n        }\r\n        return $dates;\r\n    }\r\n\r\n    public static function getStatus($user) {\r\n        $connection = new Connection();\r\n        $db = $connection->connect();\r\n\r\n        $query = \"SELECT * FROM user WHERE user_login=:user\";\r\n        $statement = $db->prepare($query);\r\n        $statement->bindParam(':user', $user);\r\n        $statement->execute();\r\n\r\n        $dates = [];\r\n        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {\r\n            $dates[] = [\r\n                'user_status' => $row['user_status']\r\n            ];\r\n        }\r\n        return $dates[0];\r\n    }\r\n\r\n}\r\n\r\n\r\n\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/models/login.php b/models/login.php
+--- a/models/login.php	(revision 62db8c1f3848896166e498102a4f4623fb7fae07)
++++ b/models/login.php	(date 1685638286839)
+@@ -1,5 +1,7 @@
+ <?php
+ 
++
++//hola
+ require_once "connection/Connection.php";
+ class login {
+     public static function loginIn($user, $pass) {
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"e55d232a-22ae-4fce-9cd3-0c06eb0f904c\" name=\"Changes\" comment=\"jk\">\r\n      <change beforePath=\"$PROJECT_DIR$/connection/connection.php\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/connection/connection.php\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/index.php\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/index.php\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/models/login.php\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/models/login.php\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/models/user.php\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/models/user.php\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ComposerSettings\" synchronizationState=\"SYNCHRONIZE\">\r\n    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>\r\n    <execution>\r\n      <executable path=\"composer\" />\r\n    </execution>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"PhpWorkspaceProjectConfiguration\" interpreter_name=\"C:\\xampp\\php\\php.exe\" />\r\n  <component name=\"ProjectId\" id=\"2PwpPVaXfqeYXEcb92VYp28shzw\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"WebServerToolWindowFactoryState\": \"false\",\r\n    \"last_opened_file_path\": \"C:/xampp/htdocs/evaluation\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  },\r\n  \"keyToStringList\": {\r\n    \"ChangesTree.GroupingKeys\": [\r\n    ]\r\n  }\r\n}]]></component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"e55d232a-22ae-4fce-9cd3-0c06eb0f904c\" name=\"Changes\" comment=\"\" />\r\n      <created>1684377976839</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1684377976839</updated>\r\n      <workItem from=\"1684377978633\" duration=\"10974000\" />\r\n      <workItem from=\"1684442161485\" duration=\"74905000\" />\r\n      <workItem from=\"1685553587501\" duration=\"117000\" />\r\n      <workItem from=\"1685553719475\" duration=\"13821000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"jk\">\r\n      <created>1685553810063</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1685553810063</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"2\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"jk\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"jk\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 4cfec64b449dc31711ce8da8c9054b07833b877b)
++++ b/.idea/workspace.xml	(date 1685638711200)
+@@ -23,6 +23,10 @@
+   </component>
+   <component name="Git.Settings">
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
++    <option name="UPDATE_TYPE" value="REBASE" />
++  </component>
++  <component name="MarkdownSettingsMigration">
++    <option name="stateVersion" value="1" />
+   </component>
+   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:\xampp\php\php.exe" />
+   <component name="ProjectId" id="2PwpPVaXfqeYXEcb92VYp28shzw" />
+@@ -60,7 +64,7 @@
+       <workItem from="1684377978633" duration="10974000" />
+       <workItem from="1684442161485" duration="74905000" />
+       <workItem from="1685553587501" duration="117000" />
+-      <workItem from="1685553719475" duration="13821000" />
++      <workItem from="1685553719475" duration="14215000" />
+     </task>
+     <task id="LOCAL-00001" summary="jk">
+       <created>1685553810063</created>
+@@ -80,7 +84,19 @@
+       <map>
+         <entry key="MAIN">
+           <value>
+-            <State />
++            <State>
++              <option name="FILTERS">
++                <map>
++                  <entry key="branch">
++                    <value>
++                      <list>
++                        <option value="EvaluationsBack/master" />
++                      </list>
++                    </value>
++                  </entry>
++                </map>
++              </option>
++            </State>
+           </value>
+         </entry>
+       </map>
