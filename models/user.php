@@ -12,9 +12,10 @@ class User {
         $statement->execute();
 
         if ($statement->rowCount() > 0) {
-            return true;
+            return array("code" => 1, "message" => "Usuario Creado", "payload" => "") ;
         }
-        return false;
+        http_response_code(404);
+        return array("code" => 0, "message" => "Usuario no Creado", "payload" => "");
     }
 
 
@@ -23,6 +24,7 @@ class User {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
         $dates = [];
+        $response = [];
         $where = '';
         if (isset($id_user)){
             $where = "WHERE U.id_user = ".$id_user;
@@ -32,9 +34,8 @@ class User {
                 FROM user as U
                 INNER JOIN profiles as P on U.user_profile = P.id
                 INNER JOIN clients as C on U.user_client = C.id ".$where);
-            //print_r($query);
-            //exit();
-            if ($query) {
+
+            if ($query->rowCount() > 0) {
                 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                     $dates[] = [
                         'id_user' => $row['id_user'],
@@ -47,23 +48,32 @@ class User {
                         'client' => $row['client']
                     ];
                 }
+                $response = array("code" => 1, "message" => "Usuario encontrado", "payload" => $dates);
+            }else {
+                http_response_code(404);
+                echo json_encode( array("code" => 0, "message" => "Usuario no encontrado", "payload" => ""));
             }
         }
-        return $dates;
+        return $response;
 
     }
 
 
-    public static function updateUser($id_user, $pruebaac)
+    public static function updateUser($id_user, $user_email, $first_name, $last_name, $user_status, $user_profile, $user_client)
     {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
+        if(!empty($id_user) && !empty($user_email) && !empty($first_name) && !empty($last_name) && !empty($user_status) && !empty($user_profile) && !empty($user_client) ){
+            $query = "UPDATE `user` SET `user_email` = '$user_email', `user_status` = '$user_status', `first_name` = '$first_name', `last_name` = '$last_name', `user_profile` = '$user_profile', `user_client` = '$user_client' WHERE `user`.`id_user` = '$id_user'";
+            $statement = $db->prepare($query);
+            $statement->execute();
 
-        $query = "UPDATE `user` SET user_login = '$pruebaac' WHERE `user`.id_user = $id_user";
-        $statement = $db->prepare($query);
-        $statement->execute();
+            $rowCount = $statement->rowCount();
+        }else {
+            http_response_code(404);
+            echo json_encode( array("code" => 0, "message" => "Usuario no actualizado", "payload" => ""));
+        }
 
-        $rowCount = $statement->rowCount();
 
         if ($rowCount > 0) {
             return TRUE;
@@ -77,28 +87,7 @@ class User {
 
 
 
-/*
-public static function updateUser($id_user, $pruebaac) {
-    $dbConnection = new PDO("mysql:host=localhost;dbname=nombre_base_de_datos", "usuario", "contraseña");
-    // Reemplaza "nombre_base_de_datos", "usuario" y "contraseña" con los valores adecuados para tu base de datos
 
-    $query = "UPDATE `user` SET user_login = :pruebaac WHERE id_user = :id_user";
-    $statement = $dbConnection->prepare($query);
-    $statement->bindParam(':pruebaac', $pruebaac);
-    $statement->bindParam(':id_user', $id_user);
-    $statement->execute();
-
-    $rowCount = $statement->rowCount();
-
-    if($rowCount > 0) {
-        return TRUE;
-    }
-
-    return FALSE;
-}
-
-
-*/
 
 
 
