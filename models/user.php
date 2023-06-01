@@ -1,6 +1,5 @@
 <?php
-
-//hola
+//12
 require_once "connection/Connection.php";
 class User {
     public static function newUser($user_login, $user_pass, $user_email, $first_name, $last_name, $user_profile, $user_client) {
