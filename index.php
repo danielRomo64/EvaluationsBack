@@ -1,7 +1,13 @@
 <?php
-//12
+
+header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+header('content-type: application/json; charset=utf-8');
+
     require_once "models/login.php";
     require_once "models/user.php";
+    require_once "models/all.php";
 
 
     switch ($_SERVER['REQUEST_METHOD']) {
@@ -29,19 +35,34 @@
                 case 'newUser':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(User::newUser($data['user_login'],$data['user_pass'],$data['user_email'],$data['first_name'],$data['last_name'],$data['user_profile'],$data['user_client']));
+                    echo json_encode(user::newUser($data['user_login'],$data['user_pass'],$data['user_email'],$data['first_name'],$data['last_name'],$data['user_profile'],$data['user_client']));
                     break;
                 case 'allUser':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(User::getAllUser());
+                    echo json_encode(user::getAllUser());
                     break;
                 case 'selectUser':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(User::getAllUser($data['id_user']));
-
+                    echo json_encode(user::getAllUser($data['id_user']));
                     break;
+                case 'selectCategories':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(all::getCategories());
+                    break;
+                case 'selectProfiles':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(all::getProfiles());
+                    break;
+                case 'selectClients':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(all::getClients());
+                    break;
+
                 default:
                     http_response_code(400);
             }
@@ -56,14 +77,16 @@
             switch ($data['valid']){
 
                 case 'updateUser':
-                     http_response_code(200);
-                     echo json_encode(User::updateUser($data['id_user'],$data['user_email'],$data['first_name'],$data['last_name'],$data['user_status'],$data['user_profile'],$data['user_client']));
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(user::updateUser($data['id_user'],$data['user_email'],$data['first_name'],$data['last_name'],$data['user_status'],$data['user_profile'],$data['user_client']));
 
                      break;
 
                 case 'deleteUser':
-                    //echo json_encode(User::updateUser($data['id_user'],$data['pruebaac']));
                     http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(user::deleteUser($data['id_user'],$data['user_status']));
                     break;
                 default:
                     http_response_code(400);
@@ -74,5 +97,6 @@
             http_response_code(405);
 
 }
-//hik
+
+
 

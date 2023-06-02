@@ -1,7 +1,7 @@
 <?php
 //12
 require_once "connection/Connection.php";
-class User {
+class user {
     public static function newUser($user_login, $user_pass, $user_email, $first_name, $last_name, $user_profile, $user_client) {
         $connection = new Connection();
         $db = $connection->connect();
@@ -68,18 +68,40 @@ class User {
             $statement = $db->prepare($query);
             $statement->execute();
 
-            $rowCount = $statement->rowCount();
+           // $rowCount = $statement->rowCount();
         }else {
             http_response_code(404);
-            echo json_encode( array("code" => 0, "message" => "Usuario no actualizado", "payload" => ""));
+            echo json_encode( array("code" => 0, "message" => "Datos Erroneos", "payload" => ""));
         }
 
 
-        if ($rowCount->rowCount() > 0) {
+        if ($statement->rowCount() > 0) {
             return array("code" => 1, "message" => "Usuario Actualizado", "payload" => "") ;
         }else{
             http_response_code(404);
-            echo json_encode( array("code" => 0, "message" => "Usuario no actualizado", "payload" => ""));
+            return array("code" => 0, "message" => "Usuario no actualizado", "payload" => "");
+        }
+    }
+
+
+    public static function deleteUser($id_user, $user_status)
+    {
+        $dbConnection = new Connection();
+        $db = $dbConnection->connect();
+        if(!empty($id_user) && !empty($user_status)){
+            $query = "UPDATE `user` SET `user_status` = '$user_status' WHERE `user`.`id_user` = '$id_user'";
+            $statement = $db->prepare($query);
+            $statement->execute();
+        }else {
+            http_response_code(404);
+            echo json_encode( array("code" => 0, "message" => "Datos Erroneos", "payload" => ""));
+        }
+
+        if ($statement->rowCount() > 0) {
+            return array("code" => 1, "message" => "Usuario Eliminado", "payload" => "") ;
+        }else{
+            http_response_code(404);
+            return array("code" => 0, "message" => "Usuario no Eliminado", "payload" => "");
         }
     }
 
