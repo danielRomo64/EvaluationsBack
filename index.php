@@ -110,7 +110,7 @@ header('content-type: application/json; charset=utf-8');
                 case 'updateQuestion':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(evaluation::updateEvaluation($data['category_id'],$data['range_id'],$data['state_type'],$data['title'],$data['description']));
+                    echo json_encode(evaluation::updateEvaluation($data['id'],$data['category_id'],$data['range_id'],$data['state_type'],$data['title'],$data['description']));
                     break;
                 default:
                     http_response_code(400);
