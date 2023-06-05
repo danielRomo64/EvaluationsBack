@@ -41,4 +41,48 @@ class evaluation {
             return array("code" => 0, "message" => "Pregunta no actualizado", "payload" => "");
         }
     }
+    public static function questionCategory($category_id){
+        $connection = new Connection();
+        $db = $connection->connect();
+        $dates = [];
+
+        $query = $db->query("SELECT Q.id, CONCAT(R.minimum,' - ',R.maximum) AS rang, Q.title, Q.description FROM questions AS Q  INNER JOIN ranges AS R ON Q.range_id = R.id WHERE Q.state_type = 1 AND Q.category_id ='$category_id';");
+
+        if ($query->rowCount() > 0) {
+            while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                $dates[] = [
+                    'id' => $row['id'],
+                    'rang' => $row['rang'],
+                    'title' => $row['title'],
+                    'description' => $row['description']
+                ];
+            }
+            $response = array("code" => 1, "message" => "Preguntas por categoria encontradas", "payload" => $dates);
+        }else {
+            http_response_code(404);
+            $response = array("code" => 0, "message" => "Categoria no encontradas", "payload" => "");
+        }
+        return $response;
+    }
+
+    public static function deleteQuestion($id, $state_type)
+    {
+        $dbConnection = new Connection();
+        $db = $dbConnection->connect();
+        if(!empty($id) && !empty($state_type)){
+            $query = "UPDATE `questions` SET `state_type` = '$state_type' WHERE `questions`.`id` = '$id';";
+            $statement = $db->prepare($query);
+            $statement->execute();
+        }else {
+            http_response_code(404);
+            echo json_encode( array("code" => 0, "message" => "Datos Erroneos", "payload" => ""));
+        }
+
+        if ($statement->rowCount() > 0) {
+            return array("code" => 1, "message" => "Pregunta Eliminado", "payload" => "") ;
+        }else{
+            http_response_code(404);
+            return array("code" => 0, "message" => "Pregunta no Eliminado", "payload" => "");
+        }
+    }
 }

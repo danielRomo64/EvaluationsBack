@@ -78,6 +78,11 @@ header('content-type: application/json; charset=utf-8');
                     header('Content-Type: application/json');
                     echo json_encode(evaluation::newQuestion($data['category_id'],$data['range_id'],$data['state_type'],$data['title'],$data['description']));
                     break;
+                case 'questionCategory':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(evaluation::questionCategory($data['category_id']));
+                    break;
 
                 default:
                     http_response_code(400);
@@ -111,6 +116,11 @@ header('content-type: application/json; charset=utf-8');
                     http_response_code(200);
                     header('Content-Type: application/json');
                     echo json_encode(evaluation::updateEvaluation($data['id'],$data['category_id'],$data['range_id'],$data['state_type'],$data['title'],$data['description']));
+                    break;
+                case 'deleteQuestion':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(evaluation::deleteQuestion($data['id'],$data['state_type']));
                     break;
                 default:
                     http_response_code(400);
