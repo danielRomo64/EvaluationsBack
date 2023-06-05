@@ -19,7 +19,7 @@ class evaluation {
         return array("code" => 0, "message" => "Error al crear pregunta", "payload" => "");
     }
 
-    public static function updateEvaluation($id, $category_id, $range_id, $state_type, $title, $description)
+    public static function  ($id, $category_id, $range_id, $state_type, $title, $description)
     {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
@@ -100,5 +100,20 @@ class evaluation {
         }
         http_response_code(404);
         return array("code" => 0, "message" => "Error al crear Categoria", "payload" => "");
+    }
+    public static function questionUser($question_id,$user_id,$evaluator_id,$evaluated_range,$feedback){
+        $connection = new Connection();
+        $db = $connection->connect();
+
+        $query = "INSERT INTO `evaluation_logs` (`question_id`, `user_id`, `evaluator_id`, `evaluated_range`, `feedback`, `date`) VALUES ( '$question_id', '$user_id', '$evaluator_id', '$evaluated_range', '$feedback', CURTIME());";
+
+        $statement = $db->prepare($query);
+        $statement->execute();
+
+        if ($statement->rowCount() > 0) {
+            return array("code" => 1, "message" => "Valoración Creada", "payload" => "") ;
+        }
+        http_response_code(404);
+        return array("code" => 0, "message" => "Error al crear Valoración", "payload" => "");
     }
 }

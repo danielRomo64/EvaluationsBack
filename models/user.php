@@ -8,7 +8,7 @@ class user {
 
         $valid = self::validUser($user_email);
         if ($valid){
-            $query = "INSERT INTO user(user_login, user_pass, user_email, first_name, last_name, user_profile, user_client, user_status,user_registered) VALUES ('$user_email', '$user_pass', '$user_email', '$first_name', '$last_name', '$user_profile', '$user_client',1,CURTIME())";
+            $query = "INSERT INTO user($user_login, user_pass, user_email, first_name, last_name, user_profile, user_client, user_status,user_registered) VALUES ('$user_email', '$user_pass', '$user_email', '$first_name', '$last_name', '$user_profile', '$user_client',1,CURTIME())";
 
             $statement = $db->prepare($query);
             $statement->execute();
@@ -127,6 +127,7 @@ class user {
             return array("code" => 0, "message" => "Usuario no Eliminado", "payload" => "");
         }
     }
+
 
 }
 

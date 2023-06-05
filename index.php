@@ -88,6 +88,11 @@ header('content-type: application/json; charset=utf-8');
                     header('Content-Type: application/json');
                     echo json_encode(evaluation::newCategories($data['description']));
                     break;
+                case 'questionUser':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(evaluation::questionUser($data['question_id'],$data['user_id'],$data['evaluator_id'],$data['evaluated_range'],$data['feedback']));
+                    break;
 
                 default:
                     http_response_code(400);
