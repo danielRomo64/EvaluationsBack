@@ -85,4 +85,20 @@ class evaluation {
             return array("code" => 0, "message" => "Pregunta no Eliminado", "payload" => "");
         }
     }
+
+    public static function newCategories($description){
+        $connection = new Connection();
+        $db = $connection->connect();
+
+        $query = "INSERT INTO categories(description) VALUES ('$description')";
+
+        $statement = $db->prepare($query);
+        $statement->execute();
+
+        if ($statement->rowCount() > 0) {
+            return array("code" => 1, "message" => "Categoria Creada", "payload" => "") ;
+        }
+        http_response_code(404);
+        return array("code" => 0, "message" => "Error al crear Categoria", "payload" => "");
+    }
 }
