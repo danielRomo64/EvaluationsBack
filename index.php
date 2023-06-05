@@ -8,6 +8,7 @@ header('content-type: application/json; charset=utf-8');
     require_once "models/login.php";
     require_once "models/user.php";
     require_once "models/all.php";
+    require_once "models/evaluation.php";
 
 
     switch ($_SERVER['REQUEST_METHOD']) {
@@ -62,6 +63,21 @@ header('content-type: application/json; charset=utf-8');
                     header('Content-Type: application/json');
                     echo json_encode(all::getClients());
                     break;
+                case ' >':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(all::getRanges());
+                    break;
+                case 'newRanges':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(all::newRanges($data['minimum'],$data['maximum']));
+                    break;
+                case 'newQuestion':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(evaluation::newQuestion($data['category_id'],$data['range_id'],$data['state_type'],$data['title'],$data['description']));
+                    break;
 
                 default:
                     http_response_code(400);
@@ -80,13 +96,21 @@ header('content-type: application/json; charset=utf-8');
                     http_response_code(200);
                     header('Content-Type: application/json');
                     echo json_encode(user::updateUser($data['id_user'],$data['user_email'],$data['first_name'],$data['last_name'],$data['user_status'],$data['user_profile'],$data['user_client']));
-
-                     break;
-
+                    break;
                 case 'deleteUser':
                     http_response_code(200);
                     header('Content-Type: application/json');
                     echo json_encode(user::deleteUser($data['id_user'],$data['user_status']));
+                    break;
+                case 'updateRanges':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(all::updateRanges($data['id'],$data['minimum'],$data['maximum']));
+                    break;
+                case 'updateQuestion':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(evaluation::updateEvaluation($data['category_id'],$data['range_id'],$data['state_type'],$data['title'],$data['description']));
                     break;
                 default:
                     http_response_code(400);

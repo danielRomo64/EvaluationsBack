@@ -6,10 +6,16 @@ class user {
         $connection = new Connection();
         $db = $connection->connect();
 
-        $query = "INSERT INTO user(user_login, user_pass, user_email, first_name, last_name, user_profile, user_client, user_status,user_registered) VALUES ('$user_login', '$user_pass', '$user_email', '$first_name', '$last_name', '$user_profile', '$user_client',1,CURTIME())";
+        $valid = self::validUser($user_email);
+        if ($valid){
+            $query = "INSERT INTO user(user_login, user_pass, user_email, first_name, last_name, user_profile, user_client, user_status,user_registered) VALUES ('$user_email', '$user_pass', '$user_email', '$first_name', '$last_name', '$user_profile', '$user_client',1,CURTIME())";
 
-        $statement = $db->prepare($query);
-        $statement->execute();
+            $statement = $db->prepare($query);
+            $statement->execute();
+        }else {
+            http_response_code(404);
+            return array("code" => 0, "message" => "Usuario ya Creado", "payload" => "");
+        }
 
         if ($statement->rowCount() > 0) {
             return array("code" => 1, "message" => "Usuario Creado", "payload" => "") ;
@@ -18,6 +24,23 @@ class user {
         return array("code" => 0, "message" => "Usuario no Creado", "payload" => "");
     }
 
+
+    public  static  function validUser($user_email){
+        $connection = new Connection();
+        $db = $connection->connect();
+
+        $query = "SELECT * FROM user AS U  WHERE U.user_login = '$user_email' ";
+        $statement = $db->prepare($query);
+        $statement->execute();
+
+        if ($statement->rowCount() > 0) {
+            return true;
+        }else{
+            return false;
+        }
+
+
+    }
 
 
     public static function getAllUser($id_user = null ) {
