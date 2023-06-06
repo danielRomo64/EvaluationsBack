@@ -132,6 +132,11 @@ header('content-type: application/json; charset=utf-8');
                     header('Content-Type: application/json');
                     echo json_encode(evaluation::deleteQuestion($data['id'],$data['state_type']));
                     break;
+                case 'updatePass':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(user::updatePass($data['user'],$data['pass']));
+                    break;
                 default:
                     http_response_code(400);
 

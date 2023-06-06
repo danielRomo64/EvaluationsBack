@@ -19,7 +19,7 @@ class evaluation {
         return array("code" => 0, "message" => "Error al crear pregunta", "payload" => "");
     }
 
-    public static function  ($id, $category_id, $range_id, $state_type, $title, $description)
+    public static function updateEvaluation($id, $category_id, $range_id, $state_type, $title, $description)
     {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();

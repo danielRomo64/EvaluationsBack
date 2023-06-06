@@ -38,8 +38,6 @@ class user {
         }else{
             return false;
         }
-
-
     }
 
 
@@ -127,6 +125,54 @@ class user {
             return array("code" => 0, "message" => "Usuario no Eliminado", "payload" => "");
         }
     }
+
+    public static function updatePass($user, $pass)
+    {
+        $dbConnection = new Connection();
+        $db = $dbConnection->connect();
+        if(!empty($user) && !empty($pass)){
+
+            $valid = self::validUserPass($user, $pass);
+            if ($valid){
+                $query = "UPDATE `user` SET `user_pass` = '$pass' WHERE `user`.`user_login` = '$user'";
+                $statement = $db->prepare($query);
+                $statement->execute();
+            }else {
+                http_response_code(404);
+                return array("code" => 0, "message" => "Contraseña Igual a la Anterior", "payload" => "");
+            }
+
+
+            // $rowCount = $statement->rowCount();
+        }else {
+            http_response_code(404);
+            echo json_encode( array("code" => 0, "message" => "Datos Erroneos", "payload" => ""));
+        }
+
+
+        if ($statement->rowCount() > 0) {
+            return array("code" => 1, "message" => "Contraseña Actualizado", "payload" => "") ;
+        }else{
+            http_response_code(404);
+            return array("code" => 0, "message" => "Contraseña no Actualizado", "payload" => "");
+        }
+    }
+    public  static  function validUserPass($user, $pass){
+        $connection = new Connection();
+        $db = $connection->connect();
+
+        $query = "SELECT * FROM user AS U  WHERE U.user_login = '$user' AND U.user_pass = '$pass' ";
+        $statement = $db->prepare($query);
+        $statement->execute();
+
+        if ($statement->rowCount() > 0) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+
 
 
 }
