@@ -93,6 +93,21 @@ header('content-type: application/json; charset=utf-8');
                     header('Content-Type: application/json');
                     echo json_encode(evaluation::questionUser($data['question_id'],$data['user_id'],$data['evaluator_id'],$data['evaluated_range'],$data['feedback']));
                     break;
+                case 'userDateEvaluation':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(all::userDateEvaluation());
+                    break;
+                case 'userDateEvaluationMonth':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(all::userDateEvaluation($data['month'],$data['year']));
+                    break;
+                case 'userDateEvaluationDay':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(all::userDateEvaluation($data['month'],$data['year'],$data['day']));
+                    break;
 
                 default:
                     http_response_code(400);

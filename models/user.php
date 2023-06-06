@@ -143,7 +143,6 @@ class user {
             }
 
 
-            // $rowCount = $statement->rowCount();
         }else {
             http_response_code(404);
             echo json_encode( array("code" => 0, "message" => "Datos Erroneos", "payload" => ""));
