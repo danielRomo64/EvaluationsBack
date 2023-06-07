@@ -23,8 +23,50 @@ class all {
             $response = array("code" => 0, "message" => "Categorias no encontradas", "payload" => "");
         }
         return $response;
-
     }
+
+
+    public static function newCategories($description) {
+        $connection = new Connection();
+        $db = $connection->connect();
+
+        $query = "INSERT INTO categories(description,status) VALUES ('$description','1')";
+
+        $statement = $db->prepare($query);
+        $statement->execute();
+
+        if ($statement->rowCount() > 0) {
+            return array("code" => 1, "message" => "Perfiles Creado", "payload" => "") ;
+        }
+        http_response_code(404);
+        return array("code" => 0, "message" => "Perfiles no Creado", "payload" => "");
+    }
+
+    public static function updateCategories($id, $description , $status)
+    {
+        $dbConnection = new Connection();
+        $db = $dbConnection->connect();
+        if(!empty($id) && !empty($description)){
+            $query = "UPDATE `categories` SET `description` = '$description', `status` = `$status` WHERE `states`.`id` = '$id'";
+            $statement = $db->prepare($query);
+            $statement->execute();
+
+        }else {
+            http_response_code(404);
+            echo json_encode( array("code" => 0, "message" => "Datos Erroneos", "payload" => ""));
+        }
+
+
+        if ($statement->rowCount() > 0) {
+            return array("code" => 1, "message" => "Perfiles Actualizado", "payload" => "") ;
+        }else{
+            http_response_code(404);
+            return array("code" => 0, "message" => "Perfiles no actualizado", "payload" => "");
+        }
+    }
+
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
     public static function getProfiles(){
         $connection = new Connection();
         $db = $connection->connect();
@@ -48,6 +90,48 @@ class all {
         return $response;
 
     }
+
+
+    public static function newProfiles($description) {
+        $connection = new Connection();
+        $db = $connection->connect();
+
+        $query = "INSERT INTO profiles(description,status) VALUES ('$description','1')";
+
+        $statement = $db->prepare($query);
+        $statement->execute();
+
+        if ($statement->rowCount() > 0) {
+            return array("code" => 1, "message" => "Perfiles Creado", "payload" => "") ;
+        }
+        http_response_code(404);
+        return array("code" => 0, "message" => "Perfiles no Creado", "payload" => "");
+    }
+
+    public static function updateProfiles($id, $description , $status)
+    {
+        $dbConnection = new Connection();
+        $db = $dbConnection->connect();
+        if(!empty($id) && !empty($description)){
+            $query = "UPDATE `profiles` SET `description` = '$description', `status` = `$status` WHERE `states`.`id` = '$id'";
+            $statement = $db->prepare($query);
+            $statement->execute();
+
+        }else {
+            http_response_code(404);
+            echo json_encode( array("code" => 0, "message" => "Datos Erroneos", "payload" => ""));
+        }
+
+
+        if ($statement->rowCount() > 0) {
+            return array("code" => 1, "message" => "Perfiles Actualizado", "payload" => "") ;
+        }else{
+            http_response_code(404);
+            return array("code" => 0, "message" => "Perfiles no actualizado", "payload" => "");
+        }
+    }
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
     public static function getClients(){
         $connection = new Connection();
         $db = $connection->connect();
@@ -70,6 +154,45 @@ class all {
         }
         return $response;
     }
+    public static function newClients($description) {
+        $connection = new Connection();
+        $db = $connection->connect();
+
+        $query = "INSERT INTO clients(description,status) VALUES ('$description','1')";
+
+        $statement = $db->prepare($query);
+        $statement->execute();
+
+        if ($statement->rowCount() > 0) {
+            return array("code" => 1, "message" => "Clientes Creado", "payload" => "") ;
+        }
+        http_response_code(404);
+        return array("code" => 0, "message" => "Clientes no Creado", "payload" => "");
+    }
+
+    public static function updateClients($id, $description , $status)
+    {
+        $dbConnection = new Connection();
+        $db = $dbConnection->connect();
+        if(!empty($id) && !empty($description)){
+            $query = "UPDATE `clients` SET `description` = '$description', `status` = `$status` WHERE `states`.`id` = '$id'";
+            $statement = $db->prepare($query);
+            $statement->execute();
+
+        }else {
+            http_response_code(404);
+            echo json_encode( array("code" => 0, "message" => "Datos Erroneos", "payload" => ""));
+        }
+
+
+        if ($statement->rowCount() > 0) {
+            return array("code" => 1, "message" => "Clientes Actualizado", "payload" => "") ;
+        }else{
+            http_response_code(404);
+            return array("code" => 0, "message" => "Clientes no actualizado", "payload" => "");
+        }
+    }
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     public static function getStates(){
         $connection = new Connection();
@@ -133,6 +256,7 @@ class all {
         }
     }
 
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 

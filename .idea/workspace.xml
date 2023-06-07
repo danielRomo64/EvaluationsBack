@@ -8,8 +8,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/all.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/all.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/evaluation.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/evaluation.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/user.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +64,7 @@
       <workItem from="1684442161485" duration="74905000" />
       <workItem from="1685553587501" duration="117000" />
       <workItem from="1685553719475" duration="26101000" />
-      <workItem from="1685724113930" duration="52785000" />
+      <workItem from="1685724113930" duration="56807000" />
     </task>
     <task id="LOCAL-00001" summary="jk">
       <created>1685553810063</created>
