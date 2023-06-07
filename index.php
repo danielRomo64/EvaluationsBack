@@ -66,12 +66,12 @@ header('content-type: application/json; charset=utf-8');
                 case 'selectRanges':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(all::getRanges());
+                    echo json_encode(all::getStates());
                     break;
                 case 'newRanges':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(all::newRanges($data['minimum'],$data['maximum']));
+                    echo json_encode(all::newStates($data['description']));
                     break;
                 case 'newQuestion':
                     http_response_code(200);
@@ -96,17 +96,17 @@ header('content-type: application/json; charset=utf-8');
                 case 'userDateEvaluation':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(all::userDateEvaluation());
+                    echo json_encode(user::userDateEvaluation());
                     break;
                 case 'userDateEvaluationMonth':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(all::userDateEvaluation($data['month'],$data['year']));
+                    echo json_encode(user::userDateEvaluation($data['month'],$data['year']));
                     break;
                 case 'userDateEvaluationDay':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(all::userDateEvaluation($data['month'],$data['year'],$data['day']));
+                    echo json_encode(user::userDateEvaluation($data['month'],$data['year'],$data['day']));
                     break;
 
                 default:
@@ -135,7 +135,7 @@ header('content-type: application/json; charset=utf-8');
                 case 'updateRanges':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(all::updateRanges($data['id'],$data['minimum'],$data['maximum']));
+                    echo json_encode(all::updateStates($data['id'],$data['$description']));
                     break;
                 case 'updateQuestion':
                     http_response_code(200);

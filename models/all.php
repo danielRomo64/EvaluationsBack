@@ -7,12 +7,13 @@ class all {
         $db = $connection->connect();
         $dates = [];
 
-        $query = $db->query("SELECT C.id, C.description FROM categories AS C");
+        $query = $db->query("SELECT C.id, C.status, C.description FROM categories AS C");
 
         if ($query->rowCount() > 0) {
             while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                 $dates[] = [
                     'id' => $row['id'],
+                    'status' => $row['status'],
                     'description' => $row['description']
                 ];
             }
@@ -29,12 +30,13 @@ class all {
         $db = $connection->connect();
         $dates = [];
 
-        $query = $db->query("SELECT P.id, P.description FROM profiles AS P");
+        $query = $db->query("SELECT P.id, P.status, P.description FROM profiles AS P");
 
         if ($query->rowCount() > 0) {
             while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                 $dates[] = [
                     'id' => $row['id'],
+                    'status' => $row['status'],
                     'description' => $row['description']
                 ];
             }
@@ -51,12 +53,13 @@ class all {
         $db = $connection->connect();
         $dates = [];
 
-        $query = $db->query("SELECT E.id, E.description FROM clients AS E");
+        $query = $db->query("SELECT E.id, E.status, E.description FROM clients AS E");
 
         if ($query->rowCount() > 0) {
             while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                 $dates[] = [
                     'id' => $row['id'],
+                    'status' => $row['status'],
                     'description' => $row['description']
                 ];
             }
@@ -68,52 +71,51 @@ class all {
         return $response;
     }
 
-    public static function getRanges(){
+    public static function getStates(){
         $connection = new Connection();
         $db = $connection->connect();
         $dates = [];
 
-        $query = $db->query("SELECT R.id, R.minimum, R.maximum FROM ranges AS R");
+        $query = $db->query("SELECT S.id, S.descripcion FROM states AS S");
 
         if ($query->rowCount() > 0) {
             while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                 $dates[] = [
                     'id' => $row['id'],
-                    'minimum' => $row['minimum'],
-                    'maximum' => $row['maximum']
+                    'descripcion' => $row['descripcion']
                 ];
             }
-            $response = array("code" => 1, "message" => "Rangos encontradas", "payload" => $dates);
+            $response = array("code" => 1, "message" => "Estados encontradas", "payload" => $dates);
         }else {
             http_response_code(404);
-            $response = array("code" => 0, "message" => "Rangos no encontradas", "payload" => "");
+            $response = array("code" => 0, "message" => "Estados no encontradas", "payload" => "");
         }
         return $response;
     }
 
-    public static function newRanges($minimum, $maximum) {
+    public static function newStates($description) {
         $connection = new Connection();
         $db = $connection->connect();
 
-        $query = "INSERT INTO ranges(minimum, maximum) VALUES ('$minimum', '$maximum')";
+        $query = "INSERT INTO states(description) VALUES ('$description')";
 
         $statement = $db->prepare($query);
         $statement->execute();
 
         if ($statement->rowCount() > 0) {
-            return array("code" => 1, "message" => "Rangos Creado", "payload" => "") ;
+            return array("code" => 1, "message" => "Estados Creado", "payload" => "") ;
         }
         http_response_code(404);
-        return array("code" => 0, "message" => "Rangos no Creado", "payload" => "");
+        return array("code" => 0, "message" => "Estados no Creado", "payload" => "");
     }
 
 
-    public static function updateRanges($id, $minimum, $maximum)
+    public static function updateStates($id, $description)
     {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
-        if(!empty($id) && !empty($minimum) && !empty($maximum) ){
-            $query = "UPDATE `ranges` SET `minimum` = '$minimum', `maximum` = '$maximum' WHERE `ranges`.`id` = '$id'";
+        if(!empty($id) && !empty($description)){
+            $query = "UPDATE `states` SET `description` = '$description' WHERE `states`.`id` = '$id'";
             $statement = $db->prepare($query);
             $statement->execute();
 
@@ -124,54 +126,13 @@ class all {
 
 
         if ($statement->rowCount() > 0) {
-            return array("code" => 1, "message" => "Usuario Actualizado", "payload" => "") ;
+            return array("code" => 1, "message" => "Estado Actualizado", "payload" => "") ;
         }else{
             http_response_code(404);
-            return array("code" => 0, "message" => "Usuario no actualizado", "payload" => "");
+            return array("code" => 0, "message" => "Estado no actualizado", "payload" => "");
         }
     }
 
-    public static function userDateEvaluation($month = null,$year = null, $day = null){
-        $connection = new Connection();
-        $db = $connection->connect();
-        $dates = [];
-        $where = '';
-        $whereYear = '';
-        $whereDay = '';
-
-        if (isset($month) && isset($year) && isset($day)) {
-            $where = " MONTH(U.user_evaluation_date) = $month ";
-            $whereYear = " AND YEAR(U.user_evaluation_date) = $year ";
-            $whereDay = " AND DAY(U.user_evaluation_date) = $day ";
-
-        } else if (isset($month) && isset($year)){
-            $where = " MONTH(U.user_evaluation_date) = $month ";
-            $whereYear = " AND YEAR(U.user_evaluation_date) = $year ";
-        }else {
-            $where = " MONTH(U.user_evaluation_date) = MONTH(NOW()) ";
-            $whereYear = " AND YEAR(U.user_evaluation_date) = YEAR(NOW()) ";
-        }
-
-
-
-        $query = $db->query("SELECT U.id_user, C.description, CONCAT(U.first_name,' ',U.last_name) AS name, U.user_evaluation_date FROM user AS U INNER JOIN clients AS C ON U.user_client = C.id WHERE  $where $whereYear $whereDay");
-
-        if ($query->rowCount() > 0) {
-            while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                $dates[] = [
-                    'id_user' => $row['id_user'],
-                    'description' => $row['description'],
-                    'name' => $row['name'],
-                    'user_evaluation_date' => $row['user_evaluation_date']
-                ];
-            }
-            $response = array("code" => 1, "message" => "Usuarios con Evaluaciones Pendientes", "payload" => $dates);
-        }else {
-            http_response_code(404);
-            $response = array("code" => 0, "message" => "No se Encontró Ningún Usuario", "payload" => "");
-        }
-        return $response;
-    }
 
 
 
