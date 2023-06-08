@@ -3,11 +3,11 @@
 require_once "connection/Connection.php";
 
 class evaluation {
-    public static function newQuestion($category_id,$range_id,$state_type,$title,$description){
+    public static function newQuestion($category_id,$state_type,$title,$description,$minimum,$maximum,$type){
         $connection = new Connection();
         $db = $connection->connect();
 
-        $query = "INSERT INTO questions(category_id, range_id, state_type, title, description) VALUES ('$category_id', '$range_id', '$state_type', '$title', '$description')";
+        $query = "INSERT INTO questions(category_id,  state_type, title, description, minimum, maximum, type) VALUES ('$category_id', '$state_type', '$title', '$description','$minimum','$maximum','$type')";
 
         $statement = $db->prepare($query);
         $statement->execute();
@@ -19,12 +19,12 @@ class evaluation {
         return array("code" => 0, "message" => "Error al crear pregunta", "payload" => "");
     }
 
-    public static function updateEvaluation($id, $category_id, $range_id, $state_type, $title, $description)
+    public static function updateEvaluation($id, $category_id, $state_type, $title, $description, $minimum, $maximum, $type)
     {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
-        if(!empty($id) && !empty($category_id) && !empty($range_id) && !empty($state_type) && !empty($title) && !empty($description) ){
-            $query = "UPDATE `questions` SET `category_id` = '$category_id', `range_id` = '$range_id', `state_type` = '$state_type', `title` = '$title', `description` = '$description' WHERE `questions`.`id` = '$id'";
+        if(!empty($id) && !empty($category_id) && !empty($state_type) && !empty($title) && !empty($description) && !empty($minimum) && !empty($maximum) && !empty($type) ){
+            $query = "UPDATE `questions` SET `category_id` = '$category_id', `state_type` = '$state_type', `title` = '$title', `description` = '$description', `minimum` = '$minimum', `maximum` = '$maximum', `type` = '$type' WHERE `questions`.`id` = '$id'";
             $statement = $db->prepare($query);
             $statement->execute();
 
@@ -46,15 +46,16 @@ class evaluation {
         $db = $connection->connect();
         $dates = [];
 
-        $query = $db->query("SELECT Q.id, CONCAT(R.minimum,' - ',R.maximum) AS rang, Q.title, Q.description FROM questions AS Q  INNER JOIN ranges AS R ON Q.range_id = R.id WHERE Q.state_type = 1 AND Q.category_id ='$category_id';");
+        $query = $db->query("SELECT Q.id, Q.title, Q.description, Q.minimum, Q.maximum, Q.type FROM questions AS Q WHERE Q.state_type = 1 AND Q.category_id = '$category_id'");
 
         if ($query->rowCount() > 0) {
             while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                 $dates[] = [
                     'id' => $row['id'],
-                    'rang' => $row['rang'],
-                    'title' => $row['title'],
-                    'description' => $row['description']
+                    'description' => $row['description'],
+                    'minimum' => $row['minimum'],
+                    'maximum' => $row['maximum'],
+                    'type' => $row['type']
                 ];
             }
             $response = array("code" => 1, "message" => "Preguntas por categoria encontradas", "payload" => $dates);
