@@ -36,7 +36,7 @@ header('content-type: application/json; charset=utf-8');
                 case 'newUser':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(user::newUser($data['user_login'],$data['user_pass'],$data['user_email'],$data['first_name'],$data['last_name'],$data['user_profile'],$data['user_client']));
+                    echo json_encode(user::newUser($data['user_pass'],$data['user_email'],$data['first_name'],$data['last_name'],$data['user_profile'],$data['user_registered'],$data['user_evaluation_date'],$data['user_job'],$data['id_client'],$data['id_evaluator']));
                     break;
                 case 'allUser':
                     http_response_code(200);
@@ -139,6 +139,13 @@ header('content-type: application/json; charset=utf-8');
                     http_response_code(200);
                     header('Content-Type: application/json');
                     echo json_encode(user::newUserJob($data['description']));
+                    break;
+
+
+                case 'selectEvaluators':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(user::newEvaluators());
                     break;
 
 

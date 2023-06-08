@@ -2,16 +2,25 @@
 //12
 require_once "connection/Connection.php";
 class user {
-    public static function newUser($user_login, $user_pass, $user_email, $first_name, $last_name, $user_profile, $user_client) {
+    public static function newUser($user_pass, $user_email, $first_name, $last_name, $user_profile, $user_registered,$user_evaluation_date,$user_job,$id_client,$id_evaluator) {
         $connection = new Connection();
         $db = $connection->connect();
 
+
         $valid = self::validUser($user_email);
+
+
         if ($valid){
-            $query = "INSERT INTO user($user_login, user_pass, user_email, first_name, last_name, user_profile, user_client, user_status,user_registered) VALUES ('$user_email', '$user_pass', '$user_email', '$first_name', '$last_name', '$user_profile', '$user_client',1,CURTIME())";
+            $query = "INSERT INTO `user` ( `user_login`, `user_pass`, `user_email`, `user_registered`, `user_status`, `first_name`, `last_name`, `user_profile`, `user_evaluation_date`, `user_job`) VALUES ('$user_email', '$user_pass', '$user_email','$user_registered', '1' ,'$first_name', '$last_name', '$user_profile', '$user_evaluation_date','$user_job')";
 
             $statement = $db->prepare($query);
             $statement->execute();
+            $idUserNew = $db->lastInsertId();
+
+            $validRelations = self::insertUserRelations($idUserNew,$id_client,$id_evaluator);
+            if ($validRelations){
+                return array("code" => 0, "message" => "error con los datos de cliente usuario evaluador", "payload" => "");
+            }
         }else {
             http_response_code(404);
             return array("code" => 0, "message" => "Usuario ya Creado", "payload" => "");
@@ -34,9 +43,25 @@ class user {
         $statement->execute();
 
         if ($statement->rowCount() > 0) {
-            return true;
-        }else{
             return false;
+        }else{
+            return true;
+        }
+    }
+
+
+    public  static  function insertUserRelations($idUserNew,$id_client,$id_evaluator){
+        $connection = new Connection();
+        $db = $connection->connect();
+
+        $query = "INSERT INTO `user_relations` (`id_user`, `id_client`, `id_evaluator`) VALUES (  '$idUserNew','$id_client', '$id_evaluator')";
+        $statement = $db->prepare($query);
+        $statement->execute();
+
+        if ($statement->rowCount() > 0) {
+            return false;
+        }else{
+            return true;
         }
     }
 
@@ -80,12 +105,12 @@ class user {
     }
 
 
-    public static function updateUser($id_user, $user_email, $first_name, $last_name, $user_status, $user_profile, $user_client)
+    public static function updateUser($id_user, $user_email, $first_name, $last_name, $user_status, $user_profile, $userEvaluationDate, $userJob)
     {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
-        if(!empty($id_user) && !empty($user_email) && !empty($first_name) && !empty($last_name) && !empty($user_status) && !empty($user_profile) && !empty($user_client) ){
-            $query = "UPDATE `user` SET `user_email` = '$user_email', `user_status` = '$user_status', `first_name` = '$first_name', `last_name` = '$last_name', `user_profile` = '$user_profile', `user_client` = '$user_client' WHERE `user`.`id_user` = '$id_user'";
+        if(!empty($id_user) && !empty($user_email) && !empty($first_name) && !empty($last_name) && !empty($user_status) && !empty($user_profile) && !empty($userEvaluationDate) ){
+            $query = "UPDATE `user` SET `user_email` = '$user_email', `user_status` = '$user_status', `first_name` = '$first_name', `last_name` = '$last_name', `user_profile` = '$user_profile', `user_evaluation_date` = '$userEvaluationDate', `user_job` = '$userJob' WHERE `user`.`id_user` = '$id_user'";
             $statement = $db->prepare($query);
             $statement->execute();
 
@@ -172,7 +197,7 @@ class user {
     }
 
 
-
+//----------------------------------------------------
     public static function userDateEvaluation($month = null,$year = null, $day = null){
         $connection = new Connection();
         $db = $connection->connect();
@@ -294,6 +319,33 @@ class user {
     }
 
 
+
+
+
+
+    public static function newEvaluators(){
+        $connection = new Connection();
+        $db = $connection->connect();
+        $dates = [];
+
+        $query = $db->query("SELECT U.id_user, C.description, CONCAT(U.first_name,' ',U.last_name) AS name, U.user_evaluation_date FROM user AS U INNER JOIN clients AS C ON U.user_client = C.id WHERE  $where $whereYear $whereDay");
+
+        if ($query->rowCount() > 0) {
+            while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                $dates[] = [
+                    'id_user' => $row['id_user'],
+                    'description' => $row['description'],
+                    'name' => $row['name'],
+                    'user_evaluation_date' => $row['user_evaluation_date']
+                ];
+            }
+            $response = array("code" => 1, "message" => "Usuarios con Evaluaciones Pendientes", "payload" => $dates);
+        }else {
+            http_response_code(404);
+            $response = array("code" => 0, "message" => "No se Encontró Ningún Usuario", "payload" => "");
+        }
+        return $response;
+    }
 
 }
 
