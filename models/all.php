@@ -27,27 +27,26 @@ class all {
 
 
     public static function newCategories($description) {
-        $connection = new Connection();
-        $db = $connection->connect();
+            $connection = new Connection();
+            $db = $connection->connect();
 
-        $query = "INSERT INTO categories(description,status) VALUES ('$description','1')";
+            $query = "INSERT INTO `categories` ( `status`, `description`) VALUES ( '1', '$description')";
 
-        $statement = $db->prepare($query);
-        $statement->execute();
+            $statement = $db->prepare($query);
+            $statement->execute();
 
-        if ($statement->rowCount() > 0) {
-            return array("code" => 1, "message" => "Perfiles Creado", "payload" => "") ;
+            if ($statement->rowCount() > 0) {
+                return array("code" => 1, "message" => "Categoria Creado", "payload" => "") ;
+            }
+            http_response_code(404);
+            return array("code" => 0, "message" => "Categoria no Creado", "payload" => "");
         }
-        http_response_code(404);
-        return array("code" => 0, "message" => "Perfiles no Creado", "payload" => "");
-    }
 
-    public static function updateCategories($id, $description , $status)
-    {
+    public static function updateCategories($id, $description , $status)    {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
         if(!empty($id) && !empty($description)){
-            $query = "UPDATE `categories` SET `description` = '$description', `status` = `$status` WHERE `states`.`id` = '$id'";
+            $query = "UPDATE `categories` SET `status` = '$status', `description` = '$description' WHERE `categories`.`id` = '$id'";
             $statement = $db->prepare($query);
             $statement->execute();
 
@@ -58,10 +57,10 @@ class all {
 
 
         if ($statement->rowCount() > 0) {
-            return array("code" => 1, "message" => "Perfiles Actualizado", "payload" => "") ;
+            return array("code" => 1, "message" => "Categoria Actualizado", "payload" => "") ;
         }else{
             http_response_code(404);
-            return array("code" => 0, "message" => "Perfiles no actualizado", "payload" => "");
+            return array("code" => 0, "message" => "Categoria no actualizado", "payload" => "");
         }
     }
 
@@ -108,12 +107,11 @@ class all {
         return array("code" => 0, "message" => "Perfiles no Creado", "payload" => "");
     }
 
-    public static function updateProfiles($id, $description , $status)
-    {
+    public static function updateProfiles($id, $description , $status)    {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
         if(!empty($id) && !empty($description)){
-            $query = "UPDATE `profiles` SET `description` = '$description', `status` = `$status` WHERE `states`.`id` = '$id'";
+            $query = "UPDATE `profiles` SET `status` = '$status', `description` = '$description' WHERE `profiles`.`id` = '$id'";
             $statement = $db->prepare($query);
             $statement->execute();
 
@@ -170,12 +168,11 @@ class all {
         return array("code" => 0, "message" => "Clientes no Creado", "payload" => "");
     }
 
-    public static function updateClients($id, $description , $status)
-    {
+    public static function updateClients($id, $description , $status)    {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
         if(!empty($id) && !empty($description)){
-            $query = "UPDATE `clients` SET `description` = '$description', `status` = `$status` WHERE `states`.`id` = '$id'";
+            $query = "UPDATE `clients` SET `status` = '$status', `description` = '$description' WHERE `clients`.`id` = '$id'";
             $statement = $db->prepare($query);
             $statement->execute();
 
@@ -186,10 +183,10 @@ class all {
 
 
         if ($statement->rowCount() > 0) {
-            return array("code" => 1, "message" => "Clientes Actualizado", "payload" => "") ;
+            return array("code" => 1, "message" => "Cliente Actualizado", "payload" => "") ;
         }else{
             http_response_code(404);
-            return array("code" => 0, "message" => "Clientes no actualizado", "payload" => "");
+            return array("code" => 0, "message" => "Cliente no actualizado", "payload" => "");
         }
     }
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -199,13 +196,13 @@ class all {
         $db = $connection->connect();
         $dates = [];
 
-        $query = $db->query("SELECT S.id, S.descripcion FROM states AS S");
+        $query = $db->query("SELECT S.id, S.description FROM states AS S");
 
         if ($query->rowCount() > 0) {
             while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                 $dates[] = [
                     'id' => $row['id'],
-                    'descripcion' => $row['descripcion']
+                    'description' => $row['description']
                 ];
             }
             $response = array("code" => 1, "message" => "Estados encontradas", "payload" => $dates);

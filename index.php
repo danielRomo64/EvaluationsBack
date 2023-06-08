@@ -48,6 +48,7 @@ header('content-type: application/json; charset=utf-8');
                     header('Content-Type: application/json');
                     echo json_encode(user::getAllUser($data['id_user']));
                     break;
+                    //--------------------------------------------------------------------------
                 case 'selectCategories':
                     http_response_code(200);
                     header('Content-Type: application/json');
@@ -68,6 +69,7 @@ header('content-type: application/json; charset=utf-8');
                     header('Content-Type: application/json');
                     echo json_encode(all::getStates());
                     break;
+                //--------------------------------------------------------------------------
                 case 'newQuestion':
                     http_response_code(200);
                     header('Content-Type: application/json');
@@ -152,11 +154,6 @@ header('content-type: application/json; charset=utf-8');
                     header('Content-Type: application/json');
                     echo json_encode(user::deleteUser($data['id_user'],$data['user_status']));
                     break;
-                case 'updateStates':
-                    http_response_code(200);
-                    header('Content-Type: application/json');
-                    echo json_encode(all::updateStates($data['id'],$data['$description']));
-                    break;
                 case 'updateQuestion':
                     http_response_code(200);
                     header('Content-Type: application/json');
@@ -177,7 +174,7 @@ header('content-type: application/json; charset=utf-8');
                 case 'updateStates':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(all::updateStates($data['id'],$data['$description']));
+                    echo json_encode(all::updateStates($data['id'],$data['description']));
                     break;
          //-------------------------------------------------------------------------------------------------------------------------------
                 case 'updateCategories':
