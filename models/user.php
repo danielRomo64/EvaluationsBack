@@ -328,21 +328,19 @@ class user {
         $db = $connection->connect();
         $dates = [];
 
-        $query = $db->query("SELECT U.id_user, C.description, CONCAT(U.first_name,' ',U.last_name) AS name, U.user_evaluation_date FROM user AS U INNER JOIN clients AS C ON U.user_client = C.id WHERE  $where $whereYear $whereDay");
+        $query = $db->query("SELECT U.id_user, CONCAT(C.description,' - ',U.last_name,' ', U.first_name) AS evaluator FROM user AS U INNER JOIN profiles  AS P ON P.id = U.user_profile INNER JOIN user_relations AS R ON R.id_user = U.id_user INNER JOIN clients AS C ON C.id = R.id_client WHERE P.description = 'Evaluador';");
 
         if ($query->rowCount() > 0) {
             while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                 $dates[] = [
                     'id_user' => $row['id_user'],
-                    'description' => $row['description'],
-                    'name' => $row['name'],
-                    'user_evaluation_date' => $row['user_evaluation_date']
+                    'evaluator' => $row['evaluator']
                 ];
             }
-            $response = array("code" => 1, "message" => "Usuarios con Evaluaciones Pendientes", "payload" => $dates);
+            $response = array("code" => 1, "message" => "Evaluadores", "payload" => $dates);
         }else {
             http_response_code(404);
-            $response = array("code" => 0, "message" => "No se Encontró Ningún Usuario", "payload" => "");
+            $response = array("code" => 0, "message" => "No se Encontro Evaluadores", "payload" => "");
         }
         return $response;
     }
