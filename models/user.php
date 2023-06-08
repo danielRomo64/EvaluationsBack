@@ -105,14 +105,20 @@ class user {
     }
 
 
-    public static function updateUser($id_user, $user_email, $first_name, $last_name, $user_status, $user_profile, $userEvaluationDate, $userJob)
+    public static function updateUser($id_user, $user_email, $first_name, $last_name, $user_profile, $user_evaluation_date,$user_job,$id_client,$id_evaluator)
     {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
-        if(!empty($id_user) && !empty($user_email) && !empty($first_name) && !empty($last_name) && !empty($user_status) && !empty($user_profile) && !empty($userEvaluationDate) ){
-            $query = "UPDATE `user` SET `user_email` = '$user_email', `user_status` = '$user_status', `first_name` = '$first_name', `last_name` = '$last_name', `user_profile` = '$user_profile', `user_evaluation_date` = '$userEvaluationDate', `user_job` = '$userJob' WHERE `user`.`id_user` = '$id_user'";
+        if(!empty($id_user) && !empty($user_email) && !empty($first_name) && !empty($last_name) && !empty($user_profile) && !empty($user_evaluation_date)  && !empty($user_job)  && !empty($id_client)  && !empty($id_evaluator) ){
+            $query = "UPDATE `user` SET `user_login` = '$user_email', `user_email` = '$user_email', `first_name` = '$first_name', `last_name` = '$last_name', `user_profile` = '$user_profile', `user_evaluation_date` = '$user_evaluation_date', `user_job` = '$user_job' WHERE `user`.`id_user` = '$id_user'";
             $statement = $db->prepare($query);
             $statement->execute();
+
+            $updateRelations = self::updateUserRelations($id_user,$id_client,$id_evaluator);
+            if ($updateRelations){
+                return array("code" => 0, "message" => "error con los datos de cliente usuario evaluador", "payload" => "");
+            }
+
 
            // $rowCount = $statement->rowCount();
         }else {
@@ -129,6 +135,22 @@ class user {
         }
     }
 
+
+    public static function updateUserRelations($id_user,$id_client,$id_evaluator)
+    {
+        $dbConnection = new Connection();
+        $db = $dbConnection->connect();
+
+            $query = "UPDATE `user_relations` SET `id_user` = '$id_user', `id_client` = '$id_client', `id_evaluator` = '$id_evaluator'  WHERE `user_relations`.`id_user` = '$id_user'";
+            $statement = $db->prepare($query);
+            $statement->execute();
+            
+        if ($statement->rowCount() > 0) {
+            return false;
+        }else{
+            return true;
+        }
+    }
 
     public static function deleteUser($id_user, $user_status)
     {
@@ -323,7 +345,7 @@ class user {
 
 
 
-    public static function newEvaluators(){
+    public static function getEvaluators(){
         $connection = new Connection();
         $db = $connection->connect();
         $dates = [];

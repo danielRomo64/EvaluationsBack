@@ -145,7 +145,7 @@ header('content-type: application/json; charset=utf-8');
                 case 'selectEvaluators':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(user::newEvaluators());
+                    echo json_encode(user::getEvaluators());
                     break;
 
 
@@ -165,7 +165,7 @@ header('content-type: application/json; charset=utf-8');
                 case 'updateUser':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(user::updateUser($data['id_user'],$data['user_email'],$data['first_name'],$data['last_name'],$data['user_status'],$data['user_profile'],$data['user_client']));
+                    echo json_encode(user::updateUser($data['id_user'],$data['user_email'],$data['first_name'],$data['last_name'],$data['user_profile'],$data['user_evaluation_date'],$data['user_job'],$data['id_client'],$data['id_evaluator']));
                     break;
                 case 'deleteUser':
                     http_response_code(200);
