@@ -69,6 +69,11 @@ header('content-type: application/json; charset=utf-8');
                     header('Content-Type: application/json');
                     echo json_encode(all::getStates());
                     break;
+                case 'selectUserJob':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(user::getUserJob());
+                    break;
                 //--------------------------------------------------------------------------
                 case 'newQuestion':
                     http_response_code(200);
@@ -129,6 +134,12 @@ header('content-type: application/json; charset=utf-8');
                     header('Content-Type: application/json');
                     echo json_encode(all::newClients($data['description']));
                     break;
+                //------------------------------------------------------------------------------------------------------------------------
+                case 'newUserJob':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(user::newUserJob($data['description']));
+                    break;
 
 
                 default:
@@ -180,30 +191,31 @@ header('content-type: application/json; charset=utf-8');
                 case 'updateCategories':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(all::updateCategories($data['id'],$data['description'],$data['status']));
+                    echo json_encode(all::updateCategories($data['id'],$data['status']));
                     break;
                 //-------------------------------------------------------------------------------------------------------------------------------
                 case 'updateClients':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(all::updateClients($data['id'],$data['description'],$data['status']));
+                    echo json_encode(all::updateClients($data['id'],$data['status']));
                     break;
                 //-------------------------------------------------------------------------------------------------------------------------------
                 case 'updateProfiles':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(all::updateProfiles($data['id'],$data['description'],$data['status']));
+                    echo json_encode(all::updateProfiles($data['id'],$data['status']));
                     break;
-
-
+                //-------------------------------------------------------------------------------------------------------------------------------
+                case 'updateUserJob':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(user::updateUserJob($data['id'],$data['status']));
+                    break;
                 default:
                     http_response_code(400);
-
-
             }
             break;
             http_response_code(405);
-
 }
 
 

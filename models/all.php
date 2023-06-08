@@ -27,26 +27,38 @@ class all {
 
 
     public static function newCategories($description) {
-            $connection = new Connection();
-            $db = $connection->connect();
+        $connection = new Connection();
+        $db = $connection->connect();
 
-            $query = "INSERT INTO `categories` ( `status`, `description`) VALUES ( '1', '$description')";
 
-            $statement = $db->prepare($query);
-            $statement->execute();
+        $existingQuery = "SELECT COUNT(*) FROM categories WHERE description = :description";
+        $existingStatement = $db->prepare($existingQuery);
+        $existingStatement->bindParam(':description', $description);
+        $existingStatement->execute();
+        $existingCount = $existingStatement->fetchColumn();
 
-            if ($statement->rowCount() > 0) {
-                return array("code" => 1, "message" => "Categoria Creado", "payload" => "") ;
-            }
-            http_response_code(404);
-            return array("code" => 0, "message" => "Categoria no Creado", "payload" => "");
+        if ($existingCount > 0) {
+            return array("code" => 0, "message" => "Categoría ya existe", "payload" => "");
         }
 
-    public static function updateCategories($id, $description , $status)    {
+        $insertQuery = "INSERT INTO categories(status, description) VALUES ('1', :description)";
+        $insertStatement = $db->prepare($insertQuery);
+        $insertStatement->bindParam(':description', $description);
+        $insertStatement->execute();
+
+        if ($insertStatement->rowCount() > 0) {
+            return array("code" => 1, "message" => "Categoría Creada", "payload" => "") ;
+        }
+
+        http_response_code(404);
+        return array("code" => 0, "message" => "Categoría no Creada", "payload" => "");
+    }
+
+    public static function updateCategories($id, $status)    {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
         if(!empty($id) && !empty($description)){
-            $query = "UPDATE `categories` SET `status` = '$status', `description` = '$description' WHERE `categories`.`id` = '$id'";
+            $query = "UPDATE `categories` SET `status` = '$status' WHERE `categories`.`id` = '$id'";
             $statement = $db->prepare($query);
             $statement->execute();
 
@@ -90,28 +102,38 @@ class all {
 
     }
 
-
     public static function newProfiles($description) {
         $connection = new Connection();
         $db = $connection->connect();
 
-        $query = "INSERT INTO profiles(description,status) VALUES ('$description','1')";
+        $existingQuery = "SELECT COUNT(*) FROM profiles WHERE description = :description";
+        $existingStatement = $db->prepare($existingQuery);
+        $existingStatement->bindParam(':description', $description);
+        $existingStatement->execute();
+        $existingCount = $existingStatement->fetchColumn();
 
-        $statement = $db->prepare($query);
-        $statement->execute();
-
-        if ($statement->rowCount() > 0) {
-            return array("code" => 1, "message" => "Perfiles Creado", "payload" => "") ;
+        if ($existingCount > 0) {
+            return array("code" => 0, "message" => "Perfil ya existe", "payload" => "");
         }
+
+        $insertQuery = "INSERT INTO profiles(description, status) VALUES (:description, '1')";
+        $insertStatement = $db->prepare($insertQuery);
+        $insertStatement->bindParam(':description', $description);
+        $insertStatement->execute();
+
+        if ($insertStatement->rowCount() > 0) {
+            return array("code" => 1, "message" => "Perfil Creado", "payload" => "") ;
+        }
+
         http_response_code(404);
-        return array("code" => 0, "message" => "Perfiles no Creado", "payload" => "");
+        return array("code" => 0, "message" => "Perfil no Creado", "payload" => "");
     }
 
-    public static function updateProfiles($id, $description , $status)    {
+    public static function updateProfiles($id, $status)    {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
         if(!empty($id) && !empty($description)){
-            $query = "UPDATE `profiles` SET `status` = '$status', `description` = '$description' WHERE `profiles`.`id` = '$id'";
+            $query = "UPDATE `profiles` SET `status` = '$status' WHERE `profiles`.`id` = '$id'";
             $statement = $db->prepare($query);
             $statement->execute();
 
@@ -156,23 +178,34 @@ class all {
         $connection = new Connection();
         $db = $connection->connect();
 
-        $query = "INSERT INTO clients(description,status) VALUES ('$description','1')";
+        $existingQuery = "SELECT COUNT(*) FROM clients WHERE description = :description";
+        $existingStatement = $db->prepare($existingQuery);
+        $existingStatement->bindParam(':description', $description);
+        $existingStatement->execute();
+        $existingCount = $existingStatement->fetchColumn();
 
-        $statement = $db->prepare($query);
-        $statement->execute();
-
-        if ($statement->rowCount() > 0) {
-            return array("code" => 1, "message" => "Clientes Creado", "payload" => "") ;
+        if ($existingCount > 0) {
+            return array("code" => 0, "message" => "Cliente ya existe", "payload" => "");
         }
+
+        $insertQuery = "INSERT INTO clients(description, status) VALUES (:description, '1')";
+        $insertStatement = $db->prepare($insertQuery);
+        $insertStatement->bindParam(':description', $description);
+        $insertStatement->execute();
+
+        if ($insertStatement->rowCount() > 0) {
+            return array("code" => 1, "message" => "Cliente Creado", "payload" => "") ;
+        }
+
         http_response_code(404);
-        return array("code" => 0, "message" => "Clientes no Creado", "payload" => "");
+        return array("code" => 0, "message" => "Cliente no Creado", "payload" => "");
     }
 
-    public static function updateClients($id, $description , $status)    {
+    public static function updateClients($id, $status)    {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
         if(!empty($id) && !empty($description)){
-            $query = "UPDATE `clients` SET `status` = '$status', `description` = '$description' WHERE `clients`.`id` = '$id'";
+            $query = "UPDATE `clients` SET `status` = '$status' WHERE `clients`.`id` = '$id'";
             $statement = $db->prepare($query);
             $statement->execute();
 
@@ -212,21 +245,31 @@ class all {
         }
         return $response;
     }
-
     public static function newStates($description) {
         $connection = new Connection();
         $db = $connection->connect();
 
-        $query = "INSERT INTO states(description) VALUES ('$description')";
+        $existingQuery = "SELECT COUNT(*) FROM states WHERE description = :description";
+        $existingStatement = $db->prepare($existingQuery);
+        $existingStatement->bindParam(':description', $description);
+        $existingStatement->execute();
+        $existingCount = $existingStatement->fetchColumn();
 
-        $statement = $db->prepare($query);
-        $statement->execute();
-
-        if ($statement->rowCount() > 0) {
-            return array("code" => 1, "message" => "Estados Creado", "payload" => "") ;
+        if ($existingCount > 0) {
+            return array("code" => 0, "message" => "Estado ya existe", "payload" => "");
         }
+
+        $insertQuery = "INSERT INTO states(description) VALUES (:description)";
+        $insertStatement = $db->prepare($insertQuery);
+        $insertStatement->bindParam(':description', $description);
+        $insertStatement->execute();
+
+        if ($insertStatement->rowCount() > 0) {
+            return array("code" => 1, "message" => "Estado Creado", "payload" => "") ;
+        }
+
         http_response_code(404);
-        return array("code" => 0, "message" => "Estados no Creado", "payload" => "");
+        return array("code" => 0, "message" => "Estado no Creado", "payload" => "");
     }
 
 

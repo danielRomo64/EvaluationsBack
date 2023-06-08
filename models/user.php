@@ -215,6 +215,83 @@ class user {
         return $response;
     }
 
+//-----------------------------------------
+
+    public static function getUserJob(){
+        $connection = new Connection();
+        $db = $connection->connect();
+        $dates = [];
+
+        $query = $db->query("SELECT U.id, U.status , U.description FROM user_job AS U");
+
+        if ($query->rowCount() > 0) {
+            while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                $dates[] = [
+                    'id' => $row['id'],
+                    'status' => $row['status'],
+                    'description' => $row['description']
+                ];
+            }
+            $response = array("code" => 1, "message" => "Cargos usuario encontradas", "payload" => $dates);
+        }else {
+            http_response_code(404);
+            $response = array("code" => 0, "message" => "Cargos usuario no encontradas", "payload" => "");
+        }
+        return $response;
+    }
+
+    public static function newUserJob($description) {
+        $connection = new Connection();
+        $db = $connection->connect();
+
+
+        $existingQuery = "SELECT COUNT(*) FROM user_job WHERE description = :description";
+        $existingStatement = $db->prepare($existingQuery);
+        $existingStatement->bindParam(':description', $description);
+        $existingStatement->execute();
+        $existingCount = $existingStatement->fetchColumn();
+
+        if ($existingCount > 0) {
+            return array("code" => 0, "message" => "Cargo ya existe", "payload" => "");
+        }
+
+
+        $insertQuery = "INSERT INTO user_job(description, status) VALUES (:description, '1')";
+        $insertStatement = $db->prepare($insertQuery);
+        $insertStatement->bindParam(':description', $description);
+        $insertStatement->execute();
+
+        if ($insertStatement->rowCount() > 0) {
+            return array("code" => 1, "message" => "Cargo Creado", "payload" => "") ;
+        }
+
+        http_response_code(404);
+        return array("code" => 0, "message" => "Cargo no Creado", "payload" => "");
+    }
+
+
+    public static function updateUserJob($id, $description, $status)
+    {
+        $dbConnection = new Connection();
+        $db = $dbConnection->connect();
+        if(!empty($id) && !empty($description)){
+            $query = "UPDATE `user_job` SET `description` = '$description', `status` = '$status' WHERE `user_job`.`id` = '$id'";
+            $statement = $db->prepare($query);
+            $statement->execute();
+
+        }else {
+            http_response_code(404);
+            echo json_encode( array("code" => 0, "message" => "Datos Erroneos", "payload" => ""));
+        }
+
+
+        if ($statement->rowCount() > 0) {
+            return array("code" => 1, "message" => "Cargo Actualizado", "payload" => "") ;
+        }else{
+            http_response_code(404);
+            return array("code" => 0, "message" => "Cargo no actualizado", "payload" => "");
+        }
+    }
 
 
 
