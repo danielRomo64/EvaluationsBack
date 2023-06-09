@@ -46,7 +46,7 @@ header('content-type: application/json; charset=utf-8');
                 case 'selectUser':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(user::getAllUser($data['id_user']));
+                    echo json_encode(user::getUser($data['id_user']));
                     break;
                     //--------------------------------------------------------------------------
                 case 'selectCategories':

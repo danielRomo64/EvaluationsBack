@@ -9,7 +9,6 @@ class user {
 
         $valid = self::validUser($user_email);
 
-
         if ($valid){
             $query = "INSERT INTO `user` ( `user_login`, `user_pass`, `user_email`, `user_registered`, `user_status`, `first_name`, `last_name`, `user_profile`, `user_evaluation_date`, `user_job`) VALUES ('$user_email', '$user_pass', '$user_email','$user_registered', '1' ,'$first_name', '$last_name', '$user_profile', '$user_evaluation_date','$user_job')";
 
@@ -66,22 +65,19 @@ class user {
     }
 
 
-    public static function getAllUser($id_user = null ) {
+    public static function getAllUser() {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
         $dates = [];
         $response = [];
-        $where = '';
-        if (isset($id_user)){
-            $where = "WHERE U.id_user = ".$id_user;
-        }
+
         if ($db) {
             $query = $db->query("SELECT U.id_user, CONCAT(U.first_name,' ',U.last_name) AS name ,U.user_email, U.user_login,  if(u.user_status != 1, 'Desactivo', 'Activo') AS states ,P.description AS profile, C.description AS client , U.user_registered, if(P.description = 'Evaluador' || P.description = 'Administrador' ,'',U.user_evaluation_date) AS user_evaluation_date, J.description AS job_user, (SELECT CONCAT(X.first_name,' ',X.last_name) AS name_ev FROM user AS X WHERE X.id_user = R.id_evaluator ) AS name_evaluator
                                         FROM user as U
                                         INNER JOIN profiles as P on U.user_profile = P.id
                                         INNER JOIN user_relations AS R ON U.id_user = R.id_user
                                         INNER JOIN clients as C on R.id_client = C.id 
-                                        INNER JOIN user_job AS J ON U.user_job = J.id".$where);
+                                        INNER JOIN user_job AS J ON U.user_job = J.id");
 
             if ($query->rowCount() > 0) {
                 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -110,6 +106,51 @@ class user {
         return $response;
 
     }
+
+
+    public static function getUser($id_user) {
+        $dbConnection = new Connection();
+        $db = $dbConnection->connect();
+        $dates = [];
+        $response = [];
+
+        if ($db) {
+            $query = $db->query("SELECT U.id_user, U.first_name, U.last_name, U.user_email, U.user_login,  U.user_status ,U.user_profile, C.id AS client , U.user_registered, U.user_evaluation_date, U.user_job,
+                                        R.id_evaluator
+                                        FROM user as U
+                                        INNER JOIN user_relations AS R ON U.id_user = R.id_user
+                                        INNER JOIN clients as C on R.id_client = C.id  WHERE U.id_user = '$id_user'");
+
+            if ($query->rowCount() > 0) {
+                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                    $dates[] = [
+                        'id_user' => $row['id_user'],
+                        'first_name' => $row['first_name'],
+                        'last_name' => $row['last_name'],
+                        'user_email' => $row['user_email'],
+                        'user_login' => $row['user_login'],
+                        'user_status' => $row['user_status'],
+                        'user_profile' => $row['user_profile'],
+                        'client' => $row['client'],
+                        'user_registered' => $row['user_registered'],
+                        'user_evaluation_date' => $row['user_evaluation_date'],
+                        'user_job' => $row['user_job'],
+                        'id_evaluator' => $row['id_evaluator']
+
+
+                    ];
+                }
+                $response = array("code" => 1, "message" => "Usuario encontrado", "payload" => $dates);
+            }else {
+                http_response_code(404);
+                echo json_encode( array("code" => 0, "message" => "Usuario no encontrado", "payload" => ""));
+            }
+        }
+        return $response;
+
+    }
+
+
 
 
     public static function updateUser($id_user, $user_email, $first_name, $last_name, $user_profile, $user_evaluation_date,$user_job,$id_client,$id_evaluator)
