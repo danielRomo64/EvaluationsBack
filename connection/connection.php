@@ -1,6 +1,6 @@
 <?php
 
-class Connection
+/*class Connection
 {
     public function connect()
     {
@@ -15,13 +15,13 @@ class Connection
         }
     }
 
-}
+}*/
 
 
 
 
 //primera
-/*class Connection
+class Connection
 {
     public function connect()
     {
@@ -36,7 +36,7 @@ class Connection
         }
     }
 
-}*/
+}
 
 
 
