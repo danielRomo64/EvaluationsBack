@@ -92,8 +92,11 @@ class user {
                         'user_login' => $row['user_login'],
                         'states' => $row['states'],
                         'profile' => $row['profile'],
-                        'profile' => $row['profile'],
-                        'client' => $row['client']
+                        'client' => $row['client'],
+                        'user_registered' => $row['user_registered'],
+                        'user_evaluation_date' => $row['user_evaluation_date'],
+                        'description' => $row['description'],
+
                     ];
                 }
                 $response = array("code" => 1, "message" => "Usuario encontrado", "payload" => $dates);
