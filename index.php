@@ -80,6 +80,11 @@ header('content-type: application/json; charset=utf-8');
                     header('Content-Type: application/json');
                     echo json_encode(evaluation::newQuestion($data['category_id'],$data['state_type'],$data['title'],$data['description'],$data['minimum'],$data['maximum'],$data['type']));
                     break;
+                case 'selectAllQuestion':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(evaluation::selectAllQuestion());
+                    break;
                 case 'questionCategory':
                     http_response_code(200);
                     header('Content-Type: application/json');

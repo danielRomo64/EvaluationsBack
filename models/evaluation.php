@@ -119,6 +119,35 @@ class evaluation {
     }
 
 
+    public static function selectAllQuestion(){
+        $connection = new Connection();
+        $db = $connection->connect();
+        $dates = [];
+
+        $query = $db->query("SELECT Q.id, C.description AS categoria, if(Q.state_type != 1, 'Desactivo', 'Activo') AS states, Q.title, Q.description, if(Q.minimum = 0, if(Q.maximum = 0, 'Cualitativa', 'Cuantitativa'), 'Cuantitativa') AS type
+                                    FROM questions AS Q 
+                                    INNER JOIN categories AS C ON C.id = Q.category_id;");
+
+        if ($query->rowCount() > 0) {
+            while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                $dates[] = [
+                    'id' => $row['id'],
+                    'categoria' => $row['categoria'],
+                    'states' => $row['states'],
+                    'title' => $row['title'],
+                    'description' => $row['description'],
+                    'type' => $row['type']
+
+                ];
+            }
+            $response = array("code" => 1, "message" => "Preguntas por categoria encontradas", "payload" => $dates);
+        }else {
+            http_response_code(404);
+            $response = array("code" => 0, "message" => "Categoria no encontradas", "payload" => []);
+        }
+        return $response;
+    }
+
 
 
 
