@@ -76,7 +76,7 @@ class user {
             $where = "WHERE U.id_user = ".$id_user;
         }
         if ($db) {
-            $query = $db->query("SELECT U.id_user, CONCAT(U.first_name,' ',U.last_name) AS name ,U.user_email, U.user_login,  if(u.user_status != 1, 'Desactivo', 'Activo') AS states ,P.description AS profile, C.description AS client , U.user_registered, if(P.description = 'Evaluador' || P.description = 'Administrador' ,'',U.user_evaluation_date) AS user_evaluation_date, J.description
+            $query = $db->query("SELECT U.id_user, CONCAT(U.first_name,' ',U.last_name) AS name ,U.user_email, U.user_login,  if(u.user_status != 1, 'Desactivo', 'Activo') AS states ,P.description AS profile, C.description AS client , U.user_registered, if(P.description = 'Evaluador' || P.description = 'Administrador' ,'',U.user_evaluation_date) AS user_evaluation_date, J.description AS job_user, (SELECT CONCAT(X.first_name,' ',X.last_name) AS name_ev FROM user AS X WHERE X.id_user = R.id_evaluator ) AS name_evaluator
                                         FROM user as U
                                         INNER JOIN profiles as P on U.user_profile = P.id
                                         INNER JOIN user_relations AS R ON U.id_user = R.id_user
@@ -95,7 +95,9 @@ class user {
                         'client' => $row['client'],
                         'user_registered' => $row['user_registered'],
                         'user_evaluation_date' => $row['user_evaluation_date'],
-                        'description' => $row['description'],
+                        'job_user' => $row['job_user'],
+                        'name_evaluator' => $row['name_evaluator']
+
 
                     ];
                 }
