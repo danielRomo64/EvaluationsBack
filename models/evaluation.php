@@ -30,7 +30,7 @@ class evaluation {
 
         }else {
             http_response_code(404);
-            echo json_encode( array("code" => 0, "message" => "Datos Erroneos", "payload" => ""));
+            return json_encode( array("code" => 0, "message" => "Datos Erroneos", "payload" => ""));
         }
 
 
