@@ -76,11 +76,12 @@ class user {
             $where = "WHERE U.id_user = ".$id_user;
         }
         if ($db) {
-            $query = $db->query("SELECT U.id_user, CONCAT(U.first_name,' ',U.last_name) AS name ,U.user_email, U.user_login,  if(u.user_status != 1, 'Desactivo', 'Activo') AS states ,P.description AS profile, C.description AS client , U.user_registered
-                FROM user as U
-                INNER JOIN profiles as P on U.user_profile = P.id
-                INNER JOIN user_relations AS R ON U.id_user = R.id_user
-                INNER JOIN clients as C on R.id_client = C.id  ".$where);
+            $query = $db->query("SELECT U.id_user, CONCAT(U.first_name,' ',U.last_name) AS name ,U.user_email, U.user_login,  if(u.user_status != 1, 'Desactivo', 'Activo') AS states ,P.description AS profile, C.description AS client , U.user_registered,U.user_evaluation_date, J.description
+                                        FROM user as U
+                                        INNER JOIN profiles as P on U.user_profile = P.id
+                                        INNER JOIN user_relations AS R ON U.id_user = R.id_user
+                                        INNER JOIN clients as C on R.id_client = C.id 
+                                        INNER JOIN user_job AS J ON U.user_job = J.id ".$where);
 
             if ($query->rowCount() > 0) {
                 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
