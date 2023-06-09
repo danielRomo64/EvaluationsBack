@@ -397,8 +397,8 @@ class user {
         $connection = new Connection();
         $db = $connection->connect();
         $dates = [];
-
         $query = $db->query("SELECT U.id_user, CONCAT(C.description,' - ',U.last_name,' ', U.first_name) AS evaluator FROM user AS U INNER JOIN profiles  AS P ON P.id = U.user_profile INNER JOIN user_relations AS R ON R.id_user = U.id_user INNER JOIN clients AS C ON C.id = R.id_client WHERE P.description = 'Evaluador';");
+
 
         if ($query->rowCount() > 0) {
             while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
