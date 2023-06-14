@@ -90,11 +90,6 @@ header('content-type: application/json; charset=utf-8');
                     header('Content-Type: application/json');
                     echo json_encode(evaluation::questionCategory($data['category_id']));
                     break;
-                case 'newCategories':
-                    http_response_code(200);
-                    header('Content-Type: application/json');
-                    echo json_encode(evaluation::newCategories($data['description']));
-                    break;
                 case 'questionUser':
                     http_response_code(200);
                     header('Content-Type: application/json');
