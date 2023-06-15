@@ -31,7 +31,6 @@
                     // código de status
                     http_response_code(200);  
                     echo json_encode(login::loginIn($data['user'],$data['pass']));
-                    echo($_SESSION['profile']);
                     break;
                 case 'newUser':
                     $res = user::newUser($data['user_pass'],$data['user_email'],$data['first_name'],$data['last_name'],$data['user_profile'],$data['user_registered'],$data['user_evaluation_date'],$data['user_job'],$data['id_client'],$data['id_evaluator']);
