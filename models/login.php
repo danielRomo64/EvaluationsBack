@@ -1,55 +1,54 @@
 <?php
-//12
+
 require_once "connection/Connection.php";
 class login {
+
     public static function loginIn($user, $pass) {
+        session_start();
         $connection = new Connection();
         $db = $connection->connect();
+        if(!empty($user) && !empty($pass)){
+            $query = "SELECT U.id_user, U.first_name, U.last_name, P.description as profile
+                FROM user as U 
+                INNER JOIN profiles AS P ON P.id = U.user_profile 
+                WHERE U.user_login = :user  AND U.user_pass = :pass AND U.user_status = 1 AND P.status = 1";
+            $statement = $db->prepare($query);
+            $statement->bindParam(':user', $user);
+            $statement->bindParam(':pass', $pass);
 
-        $query = "SELECT U.id_user, U.first_name, U.last_name FROM user as U WHERE U.user_login = :user AND U.user_pass = :pass ";
-        $statement = $db->prepare($query);
-        $statement->bindParam(':user', $user);
-        $statement->bindParam(':pass', $pass);
+        }else{
+            return array("code" => 0, "message" => "Usuario no encontrado", "payload" => "");
+        }
 
         $statement->execute();
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
 
-        $state = self::getStatus($user);
-        //echo $state;
-        if ($state['user_status'] == 1) {
-            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                $dates[] = [
-                    'id_user' => $row['id_user'],
-                    'first_name' => $row['first_name'],
-                    'last_name' => $row['last_name']
-                ];
+        if($statement->rowCount() > 0) {
+            $fila = array(
+                'id_user' => $row['id_user'],
+                'first_name' => $row['first_name'],
+                'last_name' => $row['last_name'],
+                'profile' => $row['profile']
+
+            );
+            $_SESSION['id_user'] = $row['id_user'];
+            $_SESSION['first_name'] = $row['first_name'];
+            $_SESSION['last_name'] = $row['last_name'];
+            $_SESSION['profile'] = $row['profile'];
+
+            if ($row['profile'] == "Administrador"){
+                return array("code" => 1, "message" => "Usuario Administrador encontrado", "payload" => $fila);
+            }else if($row['profile'] == "Evaluador"){
+                return array("code" => 2, "message" => "Usuario Evaluador encontrado", "payload" => $fila);
+            }else{
+                return array("code" => 0, "message" => "Usuario no encontrado", "payload" => "");
             }
-        } else {
-            $dates[] = ['user' => ['not found']];
+
+        }else {
+            return array("code" => 0, "message" => "Usuario no encontrado", "payload" => "");
         }
-        return $dates;
     }
 
-    public static function getStatus($user) {
-        $connection = new Connection();
-        $db = $connection->connect();
 
-        $query = "SELECT * FROM user WHERE user_login=:user";
-        $statement = $db->prepare($query);
-        $statement->bindParam(':user', $user);
-        $statement->execute();
-
-        $dates = [];
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $dates[] = [
-                'user_status' => $row['user_status']
-            ];
-        }
-        return $dates[0];
-    }
 
 }
-
-
-
-
-
