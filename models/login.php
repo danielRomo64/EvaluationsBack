@@ -2,6 +2,8 @@
 
 
 require_once "connection/Connection.php";
+require 'vendor/autoload.php';
+
 class login {
     public static function loginIn($user, $pass) {
         $connection = new Connection();
@@ -35,7 +37,6 @@ class login {
                 'profile' => $row['profile']
             );
 
-            // Generar el token JWT
             $jwt = self::generateJWT($tokenPayload);
 
             if ($row['profile'] == "Administrador"){
@@ -52,26 +53,11 @@ class login {
     }
 
     private static function generateJWT($payload) {
-        require 'vendor/autoload.php';
-
-
-        use \Firebase\JWT\JWT;
-
-        // Clave secreta para firmar el JWT
         $jwtSecretKey = 'your_secret_key';
-
-        // Tiempo de expiración del token (opcional)
-        $expirationTime = time() + 3600; // 1 hora
-
-        // Construir el token JWT
-        $jwt = JWT::encode([
-            'exp' => $expirationTime,
-            'data' => $payload
-        ], $jwtSecretKey);
-
+        $jwtAlgorithm = 'HS256';
+        $jwt = \Firebase\JWT\JWT::encode($payload, $jwtSecretKey, $jwtAlgorithm);
         return $jwt;
     }
-
 
 
 }
