@@ -81,7 +81,6 @@
                     header('Content-Type: application/json');
                     echo json_encode($res);
                     break;
-
                 case 'selectProfiles':
                     $scode = 200;
                     $res = all::getProfiles();
@@ -148,11 +147,6 @@
                     http_response_code(200);
                     header('Content-Type: application/json');
                     echo json_encode(all::userDateEvaluation($data['month'],$data['year'],$data['day']));
-                    break;                
-                case 'newCategories':
-                    http_response_code(200);
-                    header('Content-Type: application/json');
-                    echo json_encode(evaluation::newCategories($data['description']));
                     break;
                 case 'newProfiles':
                     http_response_code(200);
@@ -168,8 +162,7 @@
                     }
                     header('Content-Type: application/json');
                     echo $res;
-                    break;               
-                
+                    break;
                 case 'newClients':
                     http_response_code(200);
                     header('Content-Type: application/json');
@@ -190,6 +183,51 @@
                     header('Content-Type: application/json');
                     echo json_encode(user::newUserJob($data['description']));
                     break;
+                case 'getSelectCategories':
+                    $res = all::getSelectCategories();
+                    if ($res["code"] == -1){
+                        $scode = 500;
+                    }else{
+                        $scode = 200;
+                    }
+                    http_response_code($scode);
+                    header('Content-Type: application/json');
+                    echo json_encode($res);
+                    break;
+                case 'getSelectProfiles':
+                    $res = all::getSelectProfiles();
+                    if ($res["code"] == -1){
+                        $scode = 500;
+                    }else{
+                        $scode = 200;
+                    }
+                    http_response_code($scode);
+                    header('Content-Type: application/json');
+                    echo json_encode($res);
+                    break;
+                case 'getSelectClients':
+                    $res = all::getSelectClients();
+                    if ($res["code"] == -1){
+                        $scode = 500;
+                    }else{
+                        $scode = 200;
+                    }
+                    http_response_code($scode);
+                    header('Content-Type: application/json');
+                    echo json_encode($res);
+                    break;
+                case 'getSelectUserJob':
+                    $res = all::getSelectUserJob();
+                    if ($res["code"] == -1){
+                        $scode = 500;
+                    }else{
+                        $scode = 200;
+                    }
+                    http_response_code($scode);
+                    header('Content-Type: application/json');
+                    echo json_encode($res);
+                    break;
+
                     default:
                 http_response_code(400);
             }
@@ -214,7 +252,6 @@
                     header('Content-Type: application/json');
                     echo json_encode(user::updateUser($data['id_user'],$data['user_email'],$data['first_name'],$data['last_name'],$data['user_profile'],$data['user_evaluation_date'],$data['user_job'],$data['id_client'],$data['id_evaluator']));
                     break;
-
                 case 'deleteUser':
                     http_response_code(200);
                     header('Content-Type: application/json');
