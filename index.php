@@ -227,6 +227,16 @@
                     header('Content-Type: application/json');
                     echo json_encode($res);
                     break;
+/* Evaluador*/
+
+                case 'getCollaboratorsEvaluator':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(evaluation::getCollaboratorsEvaluator($data['evaluatorUser']));
+                    break;
+
+
+                /*FIN  Evaluador*/
 
                     default:
                 http_response_code(400);
