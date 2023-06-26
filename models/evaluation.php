@@ -210,13 +210,12 @@ class evaluation {
 
         $insertedRows = $statement->rowCount();
 
-        if ($insertedRows > 0) {
-            $querydate = "UPDATE `user` SET `user_evaluation_date` = CURRENT_TIMESTAMP  WHERE `user`.`id_user`  = '$id_collaborator';";
-            $statement = $db->prepare($querydate);
-            $statement->execute();
+        $updateUserDate = self::updateUserDate($id_collaborator);
+        $updateEvaluationHistory = self::updateEvaluationHistory($id_collaborator, $id_evaluator);
+
+        if ((($insertedRows > 0) &&  ($updateUserDate > 0) &&  ($updateEvaluationHistory > 0)) ) {
 
             $lastInsertId = $db->lastInsertId();
-
             $selectQuery = "SELECT *
                         FROM evaluation_logs
                         WHERE id >= " . $lastInsertId;
@@ -230,6 +229,46 @@ class evaluation {
             return array("code" => 0, "message" => "Error al crear Evaluacion ", "payload" => []);
         }
     }
+    public static function updateUserDate($id_collaborator)
+    {
+        $dbConnection = new Connection();
+        $db = $dbConnection->connect();
+
+        $querydate = "UPDATE `user` SET `user_evaluation_date` = CURRENT_TIMESTAMP  WHERE `user`.`id_user`  = '$id_collaborator';";
+        $statement = $db->prepare($querydate);
+        $statement->execute();
+
+        return $statement->rowCount();
+    }
+
+    public static function updateEvaluationHistory($id_collaborator, $id_evaluator)
+    {
+        $dbConnection = new Connection();
+        $db = $dbConnection->connect();
+
+        $querydate = "INSERT INTO `evaluation_history` (`id_user`, `id_evaluator`, `date_evaluation`) VALUES ( '$id_collaborator', '$id_evaluator', CURRENT_TIMESTAMP);";
+        $statement = $db->prepare($querydate);
+        $statement->execute();
+
+        return $statement->rowCount();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public static function updateQuestion($id_log,$question_id,$user_id,$evaluator_id,$evaluated_range,$feedback,$date)
     {
