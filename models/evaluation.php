@@ -195,7 +195,55 @@ class evaluation {
         return $response;
     }
 
+    public static function startEvaluation($id_collaborator, $id_evaluator)
+    {
+        $connection = new Connection();
+        $db = $connection->connect();
 
+        $query = "INSERT INTO evaluation_logs (question_id, user_id, evaluator_id)
+              SELECT Q.id, " . $id_collaborator . ", " . $id_evaluator . "
+              FROM questions AS Q
+              WHERE Q.state_type = 1";
 
+        $statement = $db->prepare($query);
+        $statement->execute();
 
+        $insertedRows = $statement->rowCount();
+
+        if ($insertedRows > 0) {
+            $lastInsertId = $db->lastInsertId();
+
+            $selectQuery = "SELECT *
+                        FROM evaluation_logs
+                        WHERE id >= " . $lastInsertId;
+
+            $selectStatement = $db->prepare($selectQuery);
+            $selectStatement->execute();
+            $insertedData = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+
+            return array("code" => 1, "message" => "Evaluacion creada exitosamente ", "payload" => $insertedData);
+        } else {
+            return array("code" => 0, "message" => "Error al crear Evaluacion ", "payload" => []);
+        }
+    }
+
+    public static function updateQuestion($id_log,$question_id,$user_id,$evaluator_id,$evaluated_range,$feedback,$date)
+    {
+        $dbConnection = new Connection();
+        $db = $dbConnection->connect();
+        if(!empty($id_log) && !empty($question_id) && !empty($user_id) && !empty($evaluator_id) && !empty($evaluated_range) && !empty($feedback)  && !empty($date)){
+            $query = "UPDATE `evaluation_logs` SET `evaluated_range` = '$evaluated_range', `feedback` = '$feedback', `date` = '$date', `evaluator_id` = '$evaluator_id' WHERE `evaluation_logs`.`id` = '$id_log' AND `evaluation_logs`.`question_id` = '$question_id'  AND `evaluation_logs`.`user_id` = '$user_id'";
+            $statement = $db->prepare($query);
+            $statement->execute();
+
+            if ($statement->rowCount() > 0) {
+                return array("code" => 1, "message" => "Pregunta guardada.", "payload" => "");
+            }else{
+                return array("code" => 1, "message" => "No se detectaron cambios.", "payload" => "");
+            }
+
+        }else{
+            return array("code" => 3, "message" => "Datos Erroneos", "payload" => "");
+        }
+    }
 }

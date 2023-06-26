@@ -28,6 +28,9 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:\xampp\php\php.exe" />
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
   <component name="ProjectId" id="2PwpPVaXfqeYXEcb92VYp28shzw" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -67,7 +70,7 @@
       <workItem from="1685553719475" duration="26101000" />
       <workItem from="1685724113930" duration="104629000" />
       <workItem from="1686835784350" duration="2813000" />
-      <workItem from="1686846246898" duration="58258000" />
+      <workItem from="1686846246898" duration="71677000" />
     </task>
     <task id="LOCAL-00001" summary="jk">
       <created>1685553810063</created>
