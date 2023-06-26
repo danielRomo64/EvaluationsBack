@@ -203,7 +203,7 @@ class evaluation {
         $query = "INSERT INTO evaluation_logs (question_id, user_id, evaluator_id)
               SELECT Q.id, " . $id_collaborator . ", " . $id_evaluator . "
               FROM questions AS Q
-              WHERE Q.state_type = 1";
+              WHERE Q.state_type = 1 ;";
 
         $statement = $db->prepare($query);
         $statement->execute();
@@ -211,6 +211,10 @@ class evaluation {
         $insertedRows = $statement->rowCount();
 
         if ($insertedRows > 0) {
+            $querydate = "UPDATE `user` SET `user_evaluation_date` = CURRENT_TIMESTAMP  WHERE `user`.`id_user`  = '$id_collaborator';";
+            $statement = $db->prepare($querydate);
+            $statement->execute();
+
             $lastInsertId = $db->lastInsertId();
 
             $selectQuery = "SELECT *
