@@ -253,23 +253,6 @@ class evaluation {
         return $statement->rowCount();
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public static function updateQuestion($id_log,$question_id,$user_id,$evaluator_id,$evaluated_range,$feedback,$date)
     {
         $dbConnection = new Connection();
@@ -288,5 +271,37 @@ class evaluation {
         }else{
             return array("code" => 3, "message" => "Datos Erroneos", "payload" => "");
         }
+    }
+
+    public static function dataGraphics($id_collaborator,$date){
+        $connection = new Connection();
+        $db = $connection->connect();
+        $dates = [];
+
+        $query = $db->query("SELECT L.id,C.description AS category,Q.category_id, L.evaluated_range,Q.title,Q.description AS question,L.date
+                                    FROM evaluation_logs AS L
+                                    INNER JOIN questions AS Q ON Q.id = L.question_id AND Q.state_type = 1
+                                    INNER JOIN categories AS C ON C.id = Q.category_id
+                                    WHERE L.user_id = '$id_collaborator'  AND YEAR(L.date) = '$date'");
+
+        if ($query->rowCount() > 0) {
+            while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                $dates[] = [
+                    'id' => $row['id'],
+                    'category_id' => $row['category_id'],
+                    'category' => $row['category'],
+                    'evaluated_range' => $row['evaluated_range'],
+                    'title' => $row['title'],
+                    'question' => $row['question'],
+                    'date' => $row['date']
+
+                ];
+            }
+            $response = array("code" => 1, "message" => "Rangos encontradas", "payload" => $dates);
+        }else {
+            http_response_code(404);
+            $response = array("code" => 0, "message" => "Resumen de rangos no encontradas", "payload" => []);
+        }
+        return $response;
     }
 }

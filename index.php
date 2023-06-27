@@ -239,6 +239,11 @@
                     header('Content-Type: application/json');
                     echo json_encode(evaluation::startEvaluation($data['id_collaborator'], $data['id_evaluator']));
                     break;
+                case 'dataGraphics':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(evaluation::dataGraphics($data['id_collaborator'], $data['date']));
+                    break;
 
 
                 /*FIN  Evaluador*/
