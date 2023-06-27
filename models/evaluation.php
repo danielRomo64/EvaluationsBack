@@ -278,7 +278,7 @@ class evaluation {
         $db = $connection->connect();
         $dates = [];
 
-        $query = $db->query("SELECT L.id,C.description AS category,Q.category_id, L.evaluated_range,Q.title,Q.description AS question,L.date
+        $query = $db->query("SELECT L.id,C.description AS category,Q.category_id, L.evaluated_range,Q.title,Q.description AS question,Q.minimum,Q.maximum,L.date
                                     FROM evaluation_logs AS L
                                     INNER JOIN questions AS Q ON Q.id = L.question_id AND Q.state_type = 1
                                     INNER JOIN categories AS C ON C.id = Q.category_id
@@ -293,6 +293,8 @@ class evaluation {
                     'evaluated_range' => $row['evaluated_range'],
                     'title' => $row['title'],
                     'question' => $row['question'],
+                    'minimum' => $row['minimum'],
+                    'maximum' => $row['maximum'],
                     'date' => $row['date']
 
                 ];
@@ -304,4 +306,6 @@ class evaluation {
         }
         return $response;
     }
+
+
 }
