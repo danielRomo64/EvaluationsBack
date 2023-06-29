@@ -331,7 +331,7 @@
                 case 'updateQuestion':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(evaluation::updateQuestion($data['id_log'],$data['question_id'],$data['user_id'], $data['evaluator_id'], $data['evaluated_range'], $data['feedback'], $data['date']));
+                    echo json_encode(evaluation::updateQuestion($data['id_log'],$data['question_id'],$data['user_id'], $data['evaluator_id'], $data['evaluated_range'], $data['feedback']));
                     break;
 
 

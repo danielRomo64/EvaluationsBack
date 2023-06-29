@@ -283,12 +283,12 @@ class evaluation {
         return $statement->rowCount();
     }
 
-    public static function updateQuestion($id_log,$question_id,$user_id,$evaluator_id,$evaluated_range,$feedback,$date)
+    public static function updateQuestion($id_log,$question_id,$user_id,$evaluator_id,$evaluated_range,$feedback)
     {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
-        if(!empty($id_log) && !empty($question_id) && !empty($user_id) && !empty($evaluator_id) && !empty($evaluated_range) && !empty($feedback)  && !empty($date)){
-            $query = "UPDATE `evaluation_logs` SET `evaluated_range` = '$evaluated_range', `feedback` = '$feedback', `date` = '$date', `evaluator_id` = '$evaluator_id' WHERE `evaluation_logs`.`id` = '$id_log' AND `evaluation_logs`.`question_id` = '$question_id'  AND `evaluation_logs`.`user_id` = '$user_id'";
+        if(!empty($id_log) && !empty($question_id) && !empty($user_id) && !empty($evaluator_id) && !empty($evaluated_range) && !empty($feedback)){
+            $query = "UPDATE `evaluation_logs` SET `evaluated_range` = '$evaluated_range', `feedback` = '$feedback', `date` =  CURRENT_DATE , `evaluator_id` = '$evaluator_id' WHERE `evaluation_logs`.`id` = '$id_log' AND `evaluation_logs`.`question_id` = '$question_id'  AND `evaluation_logs`.`user_id` = '$user_id'";
             $statement = $db->prepare($query);
             $statement->execute();
 
