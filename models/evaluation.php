@@ -244,7 +244,7 @@ class evaluation {
 
             $lastInsertId = $db->lastInsertId();
             $selectQuery = "SELECT E.id,E.question_id, E.user_id,E.evaluator_id,E.evaluated_range,E.feedback,E.date,
-                                C.description,Q.title,Q.description,Q.minimum,Q.maximum
+                                C.id AS id_categorie, C.description AS categorie ,Q.title,Q.description,Q.minimum,Q.maximum
                                 FROM evaluation_logs AS E  
                                 INNER JOIN questions AS Q ON E.question_id = Q.id
                                 INNER JOIN categories AS C ON C.id = Q.category_id
