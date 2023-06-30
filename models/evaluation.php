@@ -335,6 +335,41 @@ class evaluation {
         }
         return $response;
     }
+    public static function getEvaluation($id_collaborator)
+    {
+        $connection = new Connection();
+        $db = $connection->connect();
+        $dates = [];
 
+        $query = $db->query("SELECT E.id,E.question_id, E.user_id,E.evaluator_id,E.evaluated_range,E.feedback,E.date,
+                                C.id AS id_categorie, C.description AS categorie ,Q.title,Q.description,Q.minimum,Q.maximum
+                                FROM evaluation_logs AS E  
+                                INNER JOIN questions AS Q ON E.question_id = Q.id
+                                INNER JOIN categories AS C ON C.id = Q.category_id
+                                WHERE Q.state_type = 1 AND C.status = 1 AND E.id = '$id_collaborator'");
+
+        if ($query->rowCount() > 0) {
+            while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                $dates[] = [
+                    'id' => $row['id'],
+                    'question_id' => $row['question_id'],
+                    'user_id' => $row['user_id'],
+                    'evaluator_id' => $row['evaluator_id'],
+                    'evaluated_range' => $row['evaluated_range'],
+                    'date' => $row['date'],
+                    'id_categorie' => $row['id_categorie'],
+                    'title' => $row['title'],
+                    'description' => $row['description'],
+                    'minimum' => $row['minimum'],
+                    'maximum' => $row['maximum']
+                ];
+            }
+            $response = array("code" => 1, "message" => "Pregunta encontrada", "payload" => $dates);
+        }else {
+            http_response_code(404);
+            $response = array("code" => 0, "message" => "Pregunta no encontrada", "payload" => []);
+        }
+        return $response;
+    }
 
 }
