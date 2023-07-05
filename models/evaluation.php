@@ -416,7 +416,7 @@ class evaluation
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
         if ($validUserEvaluation){
-            $where = " AND E.feedback >= 0   AND (YEAR(E.date) = YEAR($validUserEvaluation) OR E.date = '0000-00-00');";
+            $where = " AND E.feedback >= 0   AND (YEAR(E.date) = YEAR('$validUserEvaluation') OR E.date = '0000-00-00');";
         }else{
             $where = " AND E.evaluator_id = $id_evaluator  AND E.feedback = 0  AND E.date = '0000-00-00' ";
         }
@@ -448,8 +448,8 @@ class evaluation
             }
         }
 
-        return $response;
-        //return $query;
+        //return $response;
+        return $query;
     }
 
 
