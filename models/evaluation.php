@@ -421,7 +421,7 @@ class evaluation
             $where = " AND E.evaluator_id = $id_evaluator  AND E.feedback = 0  AND E.date = '0000-00-00' ";
         }
 
-        $query = " SELECT E.id, E.question_id, E.user_id, E.evaluator_id, E.evaluated_range, E.feedback, E.date, C.id AS id_categorie, C.description AS categorie, Q.title, Q.description, Q.minimum, Q.maximum FROM evaluation_logs AS E INNER JOIN questions AS Q ON E.question_id = Q.id INNER JOIN categories AS C ON C.id = Q.category_id WHERE Q.state_type = 1 AND C.status = 1 AND E.user_id = $id_collaborator  $where";
+        $query = "SELECT E.id, E.question_id, E.user_id, E.evaluator_id, E.evaluated_range, E.feedback, E.date, C.id AS id_categorie, C.description AS categorie, Q.title, Q.description, Q.minimum, Q.maximum FROM evaluation_logs AS E INNER JOIN questions AS Q ON E.question_id = Q.id INNER JOIN categories AS C ON C.id = Q.category_id WHERE Q.state_type = 1 AND C.status = 1 AND E.user_id = $id_collaborator  $where";
         $statement = $db->prepare($query);
         $statement->execute();
         $response = [];
@@ -444,11 +444,12 @@ class evaluation
                     'maximum' => $row['maximum']
                 ];
 
-                $response[] = $dates; // Agregar el registro al arreglo de respuesta
+                $response[] = $dates;
             }
         }
 
         return $response;
+        //return $query;
     }
 
 
