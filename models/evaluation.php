@@ -2,9 +2,11 @@
 
 require_once("connection/Connection.php");
 
-class evaluation {
+class evaluation
+{
 
-    public static function newQuestion($category_id,$state_type,$title,$description,$minimum,$maximum,$type){
+    public static function newQuestion($category_id, $state_type, $title, $description, $minimum, $maximum, $type)
+    {
         $connection = new Connection();
         $db = $connection->connect();
 
@@ -15,39 +17,42 @@ class evaluation {
         $statement->execute();
 
         if ($statement->rowCount() > 0) {
-            return array("code" => 1, "message" => "Pregunta Creada exitosamente.", "payload" => "") ;
-        }else{
-            return array("code" => 0, "message" => "Error al crear pregunta", "payload" => "");            
+            return array("code" => 1, "message" => "Pregunta Creada exitosamente.", "payload" => "");
+        } else {
+            return array("code" => 0, "message" => "Error al crear pregunta", "payload" => "");
         }
 
     }
-    public static function newPregunta($categoria, $user_pregunta, $user_inial, $user_final, $titulo){
-        
+
+    public static function newPregunta($categoria, $user_pregunta, $user_inial, $user_final, $titulo)
+    {
+
         $connection = new Connection();
         $db = $connection->connect();
 
-        if ($db){
+        if ($db) {
 
             /* $query = "INSERT INTO questions(category_id, range_id, state_type, title, description) 
             VALUES ('$category_id', '$range_id', '$state_type', '$title', '$description')"; */
 
             $query = "INSERT INTO preguntas(categoria_id, pregunta, rangoI, rangoF, state_type, titulo) 
-            VALUES ('$categoria', '$user_pregunta', '$user_inial', '$user_final', 1, '$titulo')";                  
+            VALUES ('$categoria', '$user_pregunta', '$user_inial', '$user_final', 1, '$titulo')";
 
             $statement = $db->prepare($query);
             $statement->execute();
 
             if ($statement->rowCount() > 0) {
-                return array("code" => 1, "message" => "Pregunta creada exitosamente", "payload" => "") ;
-            }else{
-                return array("code" => 0, "message" => "Error al crear pregunta", "payload" => "");            
-            }            
-        }else{
-            return array("code" => -1, "message" => "Problemas con la BD", "payload" => "");              
+                return array("code" => 1, "message" => "Pregunta creada exitosamente", "payload" => "");
+            } else {
+                return array("code" => 0, "message" => "Error al crear pregunta", "payload" => "");
+            }
+        } else {
+            return array("code" => -1, "message" => "Problemas con la BD", "payload" => "");
         }
     }
 
-    public static function questionCategory($category_id){
+    public static function questionCategory($category_id)
+    {
         $connection = new Connection();
         $db = $connection->connect();
         $dates = [];
@@ -64,40 +69,42 @@ class evaluation {
                 ];
             }
             $response = array("code" => 1, "message" => "Preguntas por categoria encontradas", "payload" => $dates);
-        }else {
+        } else {
             http_response_code(404);
             $response = array("code" => 0, "message" => "Categoria no encontradas", "payload" => "");
         }
         return $response;
     }
 
-    public static function deleteQuestion($id){
+    public static function deleteQuestion($id)
+    {
 
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
 
-        if ($db){
-            if(!empty($id)){
+        if ($db) {
+            if (!empty($id)) {
 
                 $query = "UPDATE questions SET state_type = Not state_type WHERE id = $id";
                 $statement = $db->prepare($query);
                 $statement->execute();
 
                 if ($statement->rowCount() > 0) {
-                    return array("code" => 1, "message" => "Pregunta ha sido procesada exitosamente", "payload" => "") ;
-                }else{
+                    return array("code" => 1, "message" => "Pregunta ha sido procesada exitosamente", "payload" => "");
+                } else {
                     return array("code" => 0, "message" => "Pregunta no pudo ser desactivada", "payload" => "");
-                } 
-            }else {
-                echo json_encode( array("code" => 2, "message" => "Datos Erroneos o faltantes", "payload" => ""));
-            }           
-        }else{
+                }
+            } else {
+                echo json_encode(array("code" => 2, "message" => "Datos Erroneos o faltantes", "payload" => ""));
+            }
+        } else {
             return array("code" => -1, "message" => "Problemas con la BD", "payload" => "");
         }
     }
 
-    public static function newCategories($description){
-        
+    public static function newCategories($description)
+    {
+
         $connection = new Connection();
         $db = $connection->connect();
 
@@ -107,13 +114,14 @@ class evaluation {
         $statement->execute();
 
         if ($statement->rowCount() > 0) {
-            return array("code" => 1, "message" => "Categoria Creada", "payload" => "") ;
+            return array("code" => 1, "message" => "Categoria Creada", "payload" => "");
         }
         http_response_code(404);
         return array("code" => 0, "message" => "Error al crear Categoria", "payload" => "");
     }
 
-    public static function questionUser($question_id,$user_id,$evaluator_id,$evaluated_range,$feedback){
+    public static function questionUser($question_id, $user_id, $evaluator_id, $evaluated_range, $feedback)
+    {
         $connection = new Connection();
         $db = $connection->connect();
 
@@ -123,13 +131,14 @@ class evaluation {
         $statement->execute();
 
         if ($statement->rowCount() > 0) {
-            return array("code" => 1, "message" => "Valoración Creada", "payload" => "") ;
+            return array("code" => 1, "message" => "Valoración Creada", "payload" => "");
         }
         http_response_code(404);
         return array("code" => 0, "message" => "Error al crear Valoración", "payload" => "");
     }
 
-    public static function selectAllQuestion(){
+    public static function selectAllQuestion()
+    {
         $connection = new Connection();
         $db = $connection->connect();
         $dates = [];
@@ -149,29 +158,30 @@ class evaluation {
                     'states' => $row['states'],
                     'title' => $row['title'],
                     'minimum' => $row['minimum'],
-                    'maximum' => $row['maximum'],                    
+                    'maximum' => $row['maximum'],
                     'description' => $row['description'],
                     'type' => $row['type']
 
                 ];
             }
             $response = array("code" => 1, "message" => "Preguntas por categoria encontradas", "payload" => $dates);
-        }else {
+        } else {
             http_response_code(404);
             $response = array("code" => 0, "message" => "Categoria no encontradas", "payload" => []);
         }
         return $response;
     }
 
-    public static function getCollaboratorsEvaluator($id_evaluator){
+    public static function getCollaboratorsEvaluator($id_evaluator)
+    {
         $connection = new Connection();
         $db = $connection->connect();
         $dates = [];
 
         $validEvaluator = self::validEvaluator($id_evaluator);
-        if (strpos(strtolower($validEvaluator['description']), 'eliza') !== false){
+        if (strpos(strtolower($validEvaluator['description']), 'eliza') !== false) {
             $whereEvaluator = "";
-        }else{
+        } else {
             $whereEvaluator = "U.id_user IN (SELECT R.id_user FROM user_relations AS R WHERE R.id_evaluator = '$id_evaluator' ) AND";
         }
 
@@ -188,12 +198,13 @@ class evaluation {
                 ];
             }
             $response = array("code" => 1, "message" => "Colaboradores Encontrados", "payload" => $dates);
-        }else {
+        } else {
             http_response_code(404);
             $response = array("code" => 0, "message" => "Colaboradores no encontrados", "payload" => []);
         }
         return $response;
     }
+
     public static function validEvaluator($id_collaborator)
     {
         $dbConnection = new Connection();
@@ -214,7 +225,7 @@ class evaluation {
                 ];
             }
 
-        }else {
+        } else {
             $dates = FALSE;
         }
         return $dates;
@@ -226,38 +237,67 @@ class evaluation {
     {
         $connection = new Connection();
         $db = $connection->connect();
+        $getNewEvaluationDate = '';
+        $validUserEvaluation = self::validUserEvaluation($id_collaborator);
 
-        $query = "INSERT INTO evaluation_logs (question_id, user_id, evaluator_id)
-              SELECT Q.id, " . $id_collaborator . ", " . $id_evaluator . "
-              FROM questions AS Q
-              WHERE Q.state_type = 1 ;";
+        if (is_array($validUserEvaluation) && !empty($validUserEvaluation)) {
+            $getNewEvaluationDate = self::getNewEvaluation($id_collaborator, $id_evaluator, $validUserEvaluation['date_evaluation']);
+            $response = array("code" => 1, "message" => "evaluacion encontrada anteriormente ", "payload" => [$getNewEvaluationDate]);
+        } else {
+            $query = "INSERT INTO evaluation_logs (question_id, user_id, evaluator_id)
+            SELECT Q.id, " . $id_collaborator . ", " . $id_evaluator . "
+            FROM questions AS Q
+            WHERE Q.state_type = 1 ;";
 
+            $statement = $db->prepare($query);
+            $statement->execute();
+            $insertedRows = $statement->rowCount();
+
+            $updateUserDate = self::updateUserDate($id_collaborator);
+            $updateEvaluationHistory = self::updateEvaluationHistory($id_collaborator, $id_evaluator);
+
+            if ($insertedRows > 0 && $updateUserDate > 0 && $updateEvaluationHistory > 0) {
+                $getNewEvaluation = self::getNewEvaluation($id_collaborator, $id_evaluator);
+
+                 $response =  array(
+                    "code" => 1,
+                    "message" => "Evaluación creada exitosamente",
+                    "payload" => $getNewEvaluation
+                );
+            } else {
+                 $response =  array(
+                    "code" => 0,
+                    "message" => "Error al crear la Evaluación",
+                    "payload" => []
+                );
+            }
+
+        }
+        return  $response;
+    }
+
+
+    public static function validUserEvaluation($id_collaborator)
+    {
+        $dbConnection = new Connection();
+        $db = $dbConnection->connect();
+
+        $query = "SELECT E.id, E.id_evaluator,E.date_evaluation FROM evaluation_history AS E WHERE E.id_user = '$id_collaborator' AND YEAR(E.date_evaluation) = YEAR(CURRENT_DATE) AND MONTH(E.date_evaluation) = MONTH(CURRENT_DATE) ;";
         $statement = $db->prepare($query);
         $statement->execute();
+        if ($statement->rowCount() > 0) {
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $dates = [
+                    'id' => $row['id'],
+                    'id_evaluator' => $row['id_evaluator'],
+                    'date_evaluation' => $row['date_evaluation']
+                ];
+            }
 
-        $insertedRows = $statement->rowCount();
-
-        $updateUserDate = self::updateUserDate($id_collaborator);
-        $updateEvaluationHistory = self::updateEvaluationHistory($id_collaborator, $id_evaluator);
-
-        if ((($insertedRows > 0) &&  ($updateUserDate > 0) &&  ($updateEvaluationHistory > 0)) ) {
-
-            $lastInsertId = $db->lastInsertId();
-            $selectQuery = "SELECT E.id,E.question_id, E.user_id,E.evaluator_id,E.evaluated_range,E.feedback,E.date,
-                                C.id AS id_categorie, C.description AS categorie ,Q.title,Q.description,Q.minimum,Q.maximum
-                                FROM evaluation_logs AS E  
-                                INNER JOIN questions AS Q ON E.question_id = Q.id
-                                INNER JOIN categories AS C ON C.id = Q.category_id
-                                WHERE Q.state_type = 1 AND C.status = 1 AND E.id >= " . $lastInsertId;
-
-            $selectStatement = $db->prepare($selectQuery);
-            $selectStatement->execute();
-            $insertedData = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
-
-            return array("code" => 1, "message" => "Evaluacion creada exitosamente ", "payload" => $insertedData);
-        } else {
-            return array("code" => 0, "message" => "Error al crear Evaluacion ", "payload" => []);
+        }else {
+            $dates = FALSE;
         }
+        return $dates;
     }
     public static function updateUserDate($id_collaborator)
     {
@@ -371,5 +411,45 @@ class evaluation {
         }
         return $response;
     }
+
+    public static function getNewEvaluation($id_collaborator, $id_evaluator, $validUserEvaluation = null){
+        $dbConnection = new Connection();
+        $db = $dbConnection->connect();
+        if ($validUserEvaluation){
+            $where = " AND E.feedback >= 0   AND (YEAR(E.date) = YEAR($validUserEvaluation) OR E.date = '0000-00-00');";
+        }else{
+            $where = " AND E.feedback = 0  AND E.date = '0000-00-00' ";
+        }
+
+        $query = " SELECT E.id, E.question_id, E.user_id, E.evaluator_id, E.evaluated_range, E.feedback, E.date, C.id AS id_categorie, C.description AS categorie, Q.title, Q.description, Q.minimum, Q.maximum FROM evaluation_logs AS E INNER JOIN questions AS Q ON E.question_id = Q.id INNER JOIN categories AS C ON C.id = Q.category_id WHERE Q.state_type = 1 AND C.status = 1 AND E.user_id = $id_collaborator AND E.evaluator_id = $id_evaluator $where";
+        $statement = $db->prepare($query);
+        $statement->execute();
+        $response = [];
+
+        if ($statement->rowCount() > 0) {
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $dates = [
+                    'id' => $row['id'],
+                    'question_id' => $row['question_id'],
+                    'user_id' => $row['user_id'],
+                    'evaluator_id' => $row['evaluator_id'],
+                    'evaluated_range' => $row['evaluated_range'],
+                    'feedback' => $row['feedback'],
+                    'date' => $row['date'],
+                    'id_categorie' => $row['id_categorie'],
+                    'categorie' => $row['categorie'],
+                    'title' => $row['title'],
+                    'description' => $row['description'],
+                    'minimum' => $row['minimum'],
+                    'maximum' => $row['maximum']
+                ];
+
+                $response[] = $dates; // Agregar el registro al arreglo de respuesta
+            }
+        }
+
+        return $response;
+    }
+
 
 }
