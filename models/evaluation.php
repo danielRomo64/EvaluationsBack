@@ -448,8 +448,8 @@ class evaluation
             }
         }
 
-        //return $response;
-        return $query;
+        return $response;
+        //return $query;
     }
 
 
