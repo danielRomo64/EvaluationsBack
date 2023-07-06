@@ -237,7 +237,7 @@
                 case 'startEvaluation':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(evaluation::startEvaluation($data['id_collaborator'], $data['id_evaluator']));
+                    echo json_encode(evaluation::startEvaluation($data['id_collaborator'], $data['id_evaluator'],$data['date']));
                     break;
                 case 'dataGraphics':
                     http_response_code(200);
@@ -248,6 +248,11 @@
                     http_response_code(200);
                     header('Content-Type: application/json');
                     echo json_encode(evaluation::getEvaluation($data['id_logEvaluation']));
+                    break;
+                case 'getAllEvaluation':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(evaluation::getAllEvaluation($data['id_collaborator']));
                     break;
 
 
