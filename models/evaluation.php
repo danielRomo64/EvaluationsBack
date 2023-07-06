@@ -502,7 +502,7 @@ class evaluation {
         $db = $connection->connect();
         $dates = [];
 
-        $query = $db->query("SELECT E.user_id, C.description, E.date FROM evaluation_logs AS E INNER JOIN user_relations AS J ON J.id_user = E.user_id INNER JOIN clients AS C ON J.id_client = C.id WHERE E.user_id = $id_collaborator GROUP BY E.date;");
+        $query = $db->query("SELECT E.user_id, C.description, E.date FROM evaluation_logs AS E INNER JOIN user_relations AS J ON J.id_user = E.user_id INNER JOIN clients AS C ON J.id_client = C.id WHERE E.user_id = $id_collaborator GROUP BY E.user_id, C.description, E.date;");
 
         if ($query->rowCount() > 0) {
             while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
