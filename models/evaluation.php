@@ -252,8 +252,8 @@ class evaluation {
 
             $insertedRows = $statement->rowCount();
 
-            $updateUserDate = self::updateUserDate($id_collaborator);
-            $updateEvaluationHistory = self::updateEvaluationHistory($id_collaborator, $id_evaluator);
+            $updateUserDate = self::updateUserDate($id_collaborator,$date);
+            $updateEvaluationHistory = self::updateEvaluationHistory($id_collaborator, $id_evaluator,$date);
 
             if ((($insertedRows > 0) &&  ($updateUserDate > 0) &&  ($updateEvaluationHistory > 0)) ) {
 
@@ -341,36 +341,36 @@ class evaluation {
         }
         return $dates;
     }
-    public static function updateUserDate($id_collaborator)
+    public static function updateUserDate($id_collaborator,$date)
     {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
 
-        $querydate = "UPDATE `user` SET `user_evaluation_date` = CURRENT_TIMESTAMP  WHERE `user`.`id_user`  = '$id_collaborator';";
+        $querydate = "UPDATE `user` SET `user_evaluation_date` = '$date'  WHERE `user`.`id_user`  = '$id_collaborator';";
         $statement = $db->prepare($querydate);
         $statement->execute();
 
         return $statement->rowCount();
     }
 
-    public static function updateEvaluationHistory($id_collaborator, $id_evaluator)
+    public static function updateEvaluationHistory($id_collaborator, $id_evaluator, $date)
     {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
 
-        $querydate = "INSERT INTO `evaluation_history` (`id_user`, `id_evaluator`, `date_evaluation`) VALUES ( '$id_collaborator', '$id_evaluator', CURRENT_TIMESTAMP);";
+        $querydate = "INSERT INTO `evaluation_history` (`id_user`, `id_evaluator`, `date_evaluation`) VALUES ( '$id_collaborator', '$id_evaluator', '$date');";
         $statement = $db->prepare($querydate);
         $statement->execute();
 
         return $statement->rowCount();
     }
 
-    public static function updateQuestion($id_log,$question_id,$user_id,$evaluator_id,$evaluated_range,$feedback)
+    public static function updateQuestion($id_log,$user_id,$evaluator_id,$evaluated_range,$feedback)
     {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
-        if(!empty($id_log) && !empty($question_id) && !empty($user_id) && !empty($evaluator_id) && !empty($evaluated_range) && !empty($feedback)){
-            $query = "UPDATE `evaluation_logs` SET `evaluated_range` = '$evaluated_range', `feedback` = '$feedback', `date` =  CURRENT_DATE , `evaluator_id` = '$evaluator_id' WHERE `evaluation_logs`.`id` = '$id_log' AND `evaluation_logs`.`question_id` = '$question_id'  AND `evaluation_logs`.`user_id` = '$user_id'";
+        if(!empty($id_log)  && !empty($user_id) && !empty($evaluator_id) && !empty($evaluated_range) && !empty($feedback)){
+            $query = "UPDATE `evaluation_logs` SET `evaluated_range` = '$evaluated_range', `feedback` = '$feedback' , `evaluator_id` = '$evaluator_id' WHERE `evaluation_logs`.`id` = '$id_log' AND `evaluation_logs`.`user_id` = '$user_id'";
             $statement = $db->prepare($query);
             $statement->execute();
 
