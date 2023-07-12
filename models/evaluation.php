@@ -21,6 +21,7 @@ class evaluation {
         }
 
     }
+
     public static function newPregunta($categoria, $user_pregunta, $user_inial, $user_final, $titulo){
         
         $connection = new Connection();
@@ -169,7 +170,7 @@ class evaluation {
         $dates = [];
 
         $validEvaluator = self::validEvaluator($id_evaluator);
-        if (strpos(strtolower($validEvaluator['description']), 'eliza') !== false){
+        if ((strpos(strtolower($validEvaluator['description']), 'eliza') !== false)||(strpos(strtolower($validEvaluator['description']), 'admin') !== false)){
             $whereEvaluator = "";
         }else{
             $whereEvaluator = "U.id_user IN (SELECT R.id_user FROM user_relations AS R WHERE R.id_evaluator = '$id_evaluator' ) AND";
@@ -194,14 +195,20 @@ class evaluation {
         }
         return $response;
     }
+
     public static function validEvaluator($id_collaborator)
     {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
 
-        $query = "SELECT U.id AS id_user, C.description, C.id fROM user_relations AS U  
-                        INNER JOIN clients AS C ON C.id = U.id_client
-                        WHERE U.id_user = '$id_collaborator' AND C.status = 1;";
+        $query = "SELECT U.id_user AS id_user, IF(U.id_client = 0, 'admin', C.description) AS description, IF(U.id_client = 0, 0,C.id) AS id
+                    FROM user_relations AS U  
+                    LEFT JOIN (
+                      SELECT id, status, description
+                      FROM clients
+                      WHERE status = 1
+                    ) AS C ON C.id = U.id_client
+                    WHERE U.id_user = '$id_collaborator';";
         $statement = $db->prepare($query);
         $statement->execute();
         $dates = [];
@@ -222,7 +229,6 @@ class evaluation {
         //return $statement->rowC ount();
     }
 
-
     public static function startEvaluation($id_collaborator, $id_evaluator, $date)
     {
         $connection = new Connection();
@@ -240,22 +246,24 @@ class evaluation {
         $selectStatement->execute();                
         $insertedData = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($selectStatement->rowCount() == 0){
+        //return array("code" => $selectStatement->rowCount(), "message" => "Evaluacion ya creada", "payload" => $insertedData);
 
-            $query = "INSERT INTO evaluation_logs (question_id, user_id, evaluator_id, date)
-                SELECT Q.id, " . $id_collaborator . ", " . $id_evaluator . ", '" . $date . "'
-                FROM questions AS Q
-                WHERE Q.state_type = 1 ;";
+        if ($selectStatement->rowCount() < 1 ){
 
-            $statement = $db->prepare($query);
-            $statement->execute();
+            try{
 
-            $insertedRows = $statement->rowCount();
+                $query = "INSERT INTO evaluation_logs (question_id, user_id, evaluator_id, date)
+                    SELECT Q.id, " . $id_collaborator . ", " . $id_evaluator . ", '" . $date . "'
+                    FROM questions AS Q
+                    WHERE Q.state_type = 1 ;";
 
-            $updateUserDate = self::updateUserDate($id_collaborator,$date);
-            $updateEvaluationHistory = self::updateEvaluationHistory($id_collaborator, $id_evaluator,$date);
+                $statement = $db->prepare($query);
+                $statement->execute();
 
-            if ((($insertedRows > 0) &&  ($updateUserDate > 0) &&  ($updateEvaluationHistory > 0)) ) {
+                $insertedRows = $statement->rowCount();
+
+                $updateUserDate = self::updateUserDate($id_collaborator,$date);
+                $updateEvaluationHistory = self::updateEvaluationHistory($id_collaborator, $id_evaluator,$date);
 
                 $lastInsertId = $db->lastInsertId();
                 $selectQuery = "SELECT E.id,E.question_id, E.user_id,E.evaluator_id,E.evaluated_range,E.feedback,E.date,
@@ -270,54 +278,17 @@ class evaluation {
                 $insertedData = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
         
                 return array("code" => 1, "message" => "Evaluacion creada exitosamente ", "payload" => $insertedData);
+
+            }catch (Exception $e){
+
+                return array("code" => 2, "message" => "Se presetó error en la BD. Por favor conacte al administrado.", "payload" => []);
+
             }
+
         } else {
             return array("code" => 0, "message" => "Evaluacion ya creada", "payload" => $insertedData);
         }
-    }
-
-/*     public static function startEvaluation($id_collaborator, $id_evaluator)
-    {
-        $connection = new Connection();
-        $db = $connection->connect();
-        $getNewEvaluationDate = '';
-        $validUserEvaluation = self::validUserEvaluation($id_collaborator);
-
-        if (is_array($validUserEvaluation) && !empty($validUserEvaluation)) {
-            $getNewEvaluationDate = self::getNewEvaluation($id_collaborator, $id_evaluator, $validUserEvaluation['date_evaluation']);
-            $response = array("code" => 1, "message" => "evaluacion encontrada anteriormente ", "payload" => [$getNewEvaluationDate]);
-        } else {
-            $query = "INSERT INTO evaluation_logs (question_id, user_id, evaluator_id)
-            SELECT Q.id, " . $id_collaborator . ", " . $id_evaluator . "
-            FROM questions AS Q
-            WHERE Q.state_type = 1 ;";
-
-            $statement = $db->prepare($query);
-            $statement->execute();
-            $insertedRows = $statement->rowCount();
-
-            $updateUserDate = self::updateUserDate($id_collaborator);
-            $updateEvaluationHistory = self::updateEvaluationHistory($id_collaborator, $id_evaluator);
-
-            if ($insertedRows > 0 && $updateUserDate > 0 && $updateEvaluationHistory > 0) {
-                $getNewEvaluation = self::getNewEvaluation($id_collaborator, $id_evaluator);
-
-                 $response =  array(
-                    "code" => 1,
-                    "message" => "Evaluación creada exitosamente",
-                    "payload" => $getNewEvaluation
-                );
-            } else {
-                 $response =  array(
-                    "code" => 0,
-                    "message" => "Error al crear la Evaluación",
-                    "payload" => []
-                );
-            }
-
-        }
-        return  $response;
-    } */
+    }    
 
     public static function validUserEvaluation($id_collaborator)
     {
@@ -341,6 +312,7 @@ class evaluation {
         }
         return $dates;
     }
+
     public static function updateUserDate($id_collaborator,$date)
     {
         $dbConnection = new Connection();
@@ -363,7 +335,7 @@ class evaluation {
         $statement->execute();
 
         return $statement->rowCount();
-    }
+    }    
 
     public static function updateQuestion($id_log,$user_id,$evaluator_id,$evaluated_range,$feedback)
     {
@@ -385,21 +357,24 @@ class evaluation {
         }
     }
 
-    public static function dataGraphics($id_collaborator,$date){
+    public static function dataGraphics($id_collaborator, $date){
         $connection = new Connection();
         $db = $connection->connect();
         $dates = [];
 
-        $query = $db->query("SELECT L.id,C.description AS category,Q.category_id, L.evaluated_range,Q.title,Q.description AS question,Q.minimum,Q.maximum,L.date, feedback
-                                    FROM evaluation_logs AS L
-                                    INNER JOIN questions AS Q ON Q.id = L.question_id AND Q.state_type = 1
-                                    INNER JOIN categories AS C ON C.id = Q.category_id
-                                    WHERE L.user_id = '$id_collaborator'  AND L.date = '$date'");
+        $query = $db->query("SELECT L.id,C.description AS category,Q.category_id, L.evaluated_range,Q.title,Q.description AS question,Q.minimum,Q.maximum,L.date, feedback, 
+                            concat(U.first_name, ' ', U.last_name) as name
+                            FROM evaluation_logs AS L
+                            INNER JOIN questions AS Q ON Q.id = L.question_id AND Q.state_type = 1
+                            INNER JOIN categories AS C ON C.id = Q.category_id
+                            INNER JOIN user AS U ON U.id_user = '$id_collaborator'                         
+                            WHERE L.user_id = '$id_collaborator'  AND YEAR(L.date) = '$date'");
 
         if ($query->rowCount() > 0) {
             while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                 $dates[] = [
                     'id' => $row['id'],
+                    'name' => $row['name'],                    
                     'category_id' => $row['category_id'],
                     'category' => $row['category'],
                     'evaluated_range' => $row['evaluated_range'],
@@ -494,8 +469,7 @@ class evaluation {
 
         return $response;
         //return $query;
-    }
-
+    }   
 
     public static function getAllEvaluation($id_collaborator){
         $connection = new Connection();
@@ -519,8 +493,5 @@ class evaluation {
             $response = array("code" => 0, "message" => "Evaluaciones no encontradas", "payload" => []);
         }
         return $response;
-    }
-
-
-
+    }   
 }

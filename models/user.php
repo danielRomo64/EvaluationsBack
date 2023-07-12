@@ -277,7 +277,10 @@ class User {
         $connection = new Connection();
         $db = $connection->connect();
 
-        $query = "INSERT INTO `user_relations` (`id_user`, `id_client`, `id_evaluator`) VALUES (  '$idUserNew','$id_client', '$id_evaluator')";
+        if ($id_evaluator == ""){
+            $id_evaluator = 0;
+        }
+        $query = "INSERT INTO `user_relations` (`id_user`, `id_client`, `id_evaluator`) VALUES (  '$idUserNew','$id_client', ".$id_evaluator.")";
         $statement = $db->prepare($query);
         $statement->execute();
 
@@ -369,3 +372,4 @@ class User {
         }
     }    
 }
+/*  */

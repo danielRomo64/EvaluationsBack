@@ -227,8 +227,7 @@
                     header('Content-Type: application/json');
                     echo json_encode($res);
                     break;
-/* Evaluador*/
-
+                /* Evaluador*/
                 case 'getCollaboratorsEvaluator':
                     http_response_code(200);
                     header('Content-Type: application/json');
@@ -237,25 +236,24 @@
                 case 'startEvaluation':
                     http_response_code(200);
                     header('Content-Type: application/json');
-                    echo json_encode(evaluation::startEvaluation($data['id_collaborator'], $data['id_evaluator'],$data['date']));
-                    break;
-                case 'dataGraphics':
-                    http_response_code(200);
-                    header('Content-Type: application/json');
-                    echo json_encode(evaluation::dataGraphics($data['id_collaborator'], $data['date']));
+                    echo json_encode(evaluation::startEvaluation($data['id_collaborator'], $data['id_evaluator'], $data['date']));                    
+                    //echo json_encode(evaluation::startEvaluation($data['id_collaborator'], $data['id_evaluator']));
                     break;
                 case 'getEvaluation':
                     http_response_code(200);
                     header('Content-Type: application/json');
                     echo json_encode(evaluation::getEvaluation($data['id_logEvaluation']));
-                    break;
+                    break; 
                 case 'getAllEvaluation':
                     http_response_code(200);
                     header('Content-Type: application/json');
                     echo json_encode(evaluation::getAllEvaluation($data['id_collaborator']));
+                    break;                                       
+                case 'dataGraphics':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(evaluation::dataGraphics($data['id_collaborator'], $data['date']));
                     break;
-
-
                 /*FIN  Evaluador*/
 
                     default:
@@ -343,13 +341,11 @@
                     header('Content-Type: application/json');
                     echo json_encode(evaluation::updateQuestion($data['id_log'],$data['user_id'], $data['evaluator_id'], $data['evaluated_range'], $data['feedback']));
                     break;
-
-
+                    
                 /*FIN  Evaluador*/
                 default:
                 http_response_code(400);
             }
             break;
 }
-
 
