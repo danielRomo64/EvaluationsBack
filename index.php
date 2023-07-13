@@ -253,7 +253,6 @@
                     header('Content-Type: application/json');
                     echo json_encode(evaluation::dataGraphics($data['id_collaborator'], $data['date']));
                     break;
-
                 /*FIN  Evaluador*/
                     default:
                 http_response_code(400);
@@ -344,7 +343,6 @@
                     header('Content-Type: application/json');
                     echo json_encode(evaluation::updateDateEvaluation($data['user_id'], $data['evaluator_id'], $data['date']));
                     break;
-
                 /*FIN  Evaluador*/
                 default:
                 http_response_code(400);

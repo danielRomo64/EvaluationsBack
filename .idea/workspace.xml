@@ -5,8 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9a89d5ea-9f85-4326-b1c5-67143b0a8e16" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Front - copia/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Front - copia/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Front - copia/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Front - copia/package.json" afterDir="false" />
@@ -23,10 +21,7 @@
       <change beforePath="$PROJECT_DIR$/Front/src/pages/GestionPage/ColaboradoresPage/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/pages/GestionPage/ColaboradoresPage/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Front/src/pages/Login/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/pages/Login/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/all.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/all.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/evaluation.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/evaluation.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/login.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/login.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/user.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +72,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1689177157381</updated>
-      <workItem from="1689177158389" duration="23162000" />
+      <workItem from="1689177158389" duration="27134000" />
     </task>
     <servers />
   </component>

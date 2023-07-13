@@ -225,59 +225,67 @@ class evaluation {
         $connection = new Connection();
         $db = $connection->connect();
 
+        $activeQuery = "SELECT * FROM evaluation_history AS E WHERE E.id_user = $id_collaborator AND E.date_evaluation = '$date' AND E.status = 1;";
+        $activeStatement = $db->prepare($activeQuery);
+        $activeStatement->execute();
 
-        $selectQuery = "SELECT E.id,E.question_id, E.user_id,E.evaluator_id,E.evaluated_range,E.feedback,E.date,
-        C.id AS id_categorie, C.description AS categorie ,Q.title,Q.description,Q.minimum,Q.maximum
-        FROM evaluation_logs AS E  
-        INNER JOIN questions AS Q ON E.question_id = Q.id
-        INNER JOIN categories AS C ON C.id = Q.category_id
-        WHERE Q.state_type = 1 AND C.status = 1 AND E.user_id = $id_collaborator AND E.date = '$date'";
+        if ($activeStatement->rowCount() == 0){
 
-        $selectStatement = $db->prepare($selectQuery);
-        $selectStatement->execute();                
-        $insertedData = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+            $selectQuery = "SELECT E.id,E.question_id, E.user_id,E.evaluator_id,E.evaluated_range,E.feedback,E.date,
+            C.id AS id_categorie, C.description AS categorie ,Q.title,Q.description,Q.minimum,Q.maximum
+            FROM evaluation_logs AS E  
+            INNER JOIN questions AS Q ON E.question_id = Q.id
+            INNER JOIN categories AS C ON C.id = Q.category_id
+            WHERE Q.state_type = 1 AND C.status = 1 AND E.user_id = $id_collaborator AND E.date = '$date'";
 
-        //return array("code" => $selectStatement->rowCount(), "message" => "Evaluacion ya creada", "payload" => $insertedData);
+            $selectStatement = $db->prepare($selectQuery);
+            $selectStatement->execute();
+            $insertedData = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($selectStatement->rowCount() < 1 ){
+            //return array("code" => $selectStatement->rowCount(), "message" => "Evaluacion ya creada", "payload" => $insertedData);
 
-            try{
+            if ($selectStatement->rowCount() < 1 ){
 
-                $query = "INSERT INTO evaluation_logs (question_id, user_id, evaluator_id, date)
-                    SELECT Q.id, " . $id_collaborator . ", " . $id_evaluator . ", '" . $date . "'
-                    FROM questions AS Q
-                    WHERE Q.state_type = 1 ;";
+                try{
 
-                $statement = $db->prepare($query);
-                $statement->execute();
+                    $query = "INSERT INTO evaluation_logs (question_id, user_id, evaluator_id, date)
+                        SELECT Q.id, " . $id_collaborator . ", " . $id_evaluator . ", '" . $date . "'
+                        FROM questions AS Q
+                        WHERE Q.state_type = 1 ;";
 
-                $insertedRows = $statement->rowCount();
+                    $statement = $db->prepare($query);
+                    $statement->execute();
 
-                $updateUserDate = self::updateUserDate($id_collaborator,$date);
-                $updateEvaluationHistory = self::updateEvaluationHistory($id_collaborator, $id_evaluator,$date);
+                    $insertedRows = $statement->rowCount();
 
-                $lastInsertId = $db->lastInsertId();
-                $selectQuery = "SELECT E.id,E.question_id, E.user_id,E.evaluator_id,E.evaluated_range,E.feedback,E.date,
-                                    C.id AS id_categorie, C.description AS categorie ,Q.title,Q.description,Q.minimum,Q.maximum
-                                    FROM evaluation_logs AS E  
-                                    INNER JOIN questions AS Q ON E.question_id = Q.id
-                                    INNER JOIN categories AS C ON C.id = Q.category_id
-                                    WHERE Q.state_type = 1 AND C.status = 1 AND E.id >= " . $lastInsertId;
+                    $updateUserDate = self::updateUserDate($id_collaborator,$date);
+                    $updateEvaluationHistory = self::updateEvaluationHistory($id_collaborator, $id_evaluator,$date);
 
-                $selectStatement = $db->prepare($selectQuery);
-                $selectStatement->execute();
-                $insertedData = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
-        
-                return array("code" => 1, "message" => "Evaluacion creada exitosamente ", "payload" => $insertedData);
+                    $lastInsertId = $db->lastInsertId();
+                    $selectQuery = "SELECT E.id,E.question_id, E.user_id,E.evaluator_id,E.evaluated_range,E.feedback,E.date,
+                                        C.id AS id_categorie, C.description AS categorie ,Q.title,Q.description,Q.minimum,Q.maximum
+                                        FROM evaluation_logs AS E  
+                                        INNER JOIN questions AS Q ON E.question_id = Q.id
+                                        INNER JOIN categories AS C ON C.id = Q.category_id
+                                        WHERE Q.state_type = 1 AND C.status = 1 AND E.id >= " . $lastInsertId;
 
-            }catch (Exception $e){
+                    $selectStatement = $db->prepare($selectQuery);
+                    $selectStatement->execute();
+                    $insertedData = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 
-                return array("code" => 2, "message" => "Se presetó error en la BD. Por favor conacte al administrado.", "payload" => []);
+                    return array("code" => 1, "message" => "Evaluacion creada exitosamente ", "payload" => $insertedData);
 
+                }catch (Exception $e){
+
+                    return array("code" => 2, "message" => "Se presetó error en la BD. Por favor conacte al administrado.", "payload" => []);
+
+                }
+
+            } else {
+                return array("code" => 0, "message" => "Evaluacion ya creada", "payload" => $insertedData);
             }
-
-        } else {
-            return array("code" => 0, "message" => "Evaluacion ya creada", "payload" => $insertedData);
+        }else{
+            return array("code" => 0, "message" => "Evaluacion ya finalizada", "payload" => []);
         }
     }
     public static function validUserEvaluation($id_collaborator)
