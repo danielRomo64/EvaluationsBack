@@ -5,12 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9a89d5ea-9f85-4326-b1c5-67143b0a8e16" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/evaluation.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front - copia/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Front - copia/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front - copia/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Front - copia/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front - copia/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Front - copia/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front - copia/src/components/BarraMenu/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Front - copia/src/components/BarraMenu/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front - copia/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Front - copia/src/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front - copia/src/pages/GestionPage/ColaboradoresPage/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Front - copia/src/pages/GestionPage/ColaboradoresPage/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front - copia/src/pages/Login/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Front - copia/src/pages/Login/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Front/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Front/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Front/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Front/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Front/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/App.tsx" afterDir="false" />
@@ -18,9 +22,9 @@
       <change beforePath="$PROJECT_DIR$/Front/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Front/src/pages/GestionPage/ColaboradoresPage/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/pages/GestionPage/ColaboradoresPage/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Front/src/pages/Login/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/pages/Login/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/connection/connection.php" beforeDir="false" afterPath="$PROJECT_DIR$/connection/connection.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/login/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/login/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/all.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/all.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/evaluation.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/evaluation.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/login.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/login.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/user.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.php" afterDir="false" />
     </list>
@@ -35,6 +39,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/models/all.php" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -70,11 +77,22 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1689177157381</updated>
-      <workItem from="1689177158389" duration="7690000" />
+      <workItem from="1689177158389" duration="23162000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

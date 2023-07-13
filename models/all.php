@@ -2,7 +2,6 @@
 //12
 require_once "connection/Connection.php";
 class all {
-    
     public static function getCategories(){
 
         try{
@@ -36,7 +35,6 @@ class all {
 
         }
     }
-
     public static function newCategories($description) {
         $connection = new Connection();
         $db = $connection->connect();
@@ -52,7 +50,6 @@ class all {
         http_response_code(404);
         return array("code" => 0, "message" => "Categoria no Creado", "payload" => "");
     }
-
     public static function updateCategories($id)    {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
@@ -73,7 +70,6 @@ class all {
             echo json_encode( array("code" => 0, "message" => "Datos Erroneos", "payload" => ""));
         }
     }
-    
     public static function getProfiles(){
 
         $connection = new Connection();
@@ -96,7 +92,6 @@ class all {
         }
         return $response ;
     }
-
     public static function newProfiles($description) {
         $connection = new Connection();
         $db = $connection->connect();
@@ -112,7 +107,6 @@ class all {
         http_response_code(404);
         return array("code" => 0, "message" => "Perfiles no Creado", "payload" => "");
     }
-    
     public static function updateProfiles($id)    {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
@@ -133,7 +127,6 @@ class all {
 
 
     }
-
     public static function getClients(){
 
         try{
@@ -167,7 +160,6 @@ class all {
 
         }        
     }
-
     public static function updateClients($id)    {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
@@ -189,7 +181,6 @@ class all {
             return array("code" => 0, "message" => "Cliente no actualizado", "payload" => "");
         }
     }
-
     public static function newClients($description) {
         $connection = new Connection();
         $db = $connection->connect();
@@ -204,8 +195,7 @@ class all {
         }
         http_response_code(404);
         return array("code" => 0, "message" => "Clientes no Creado", "payload" => "");
-    }    
-
+    }
     public static function getStates(){
 
         try{
@@ -239,7 +229,6 @@ class all {
 
         }        
     }
-
     public static function updateStates($id)
     {
         $dbConnection = new Connection();
@@ -262,7 +251,6 @@ class all {
         }
 
     }
-
     public static function newStates($description) {
         $connection = new Connection();
         $db = $connection->connect();
@@ -278,7 +266,6 @@ class all {
             return array("code" => 0, "message" => "Estados no Creado", "payload" => "");            
         }
     }
-
     public static function userDateEvaluation($month = null, $year = null, $day = null){
         
         $connection = new Connection();
@@ -322,8 +309,7 @@ class all {
             $response = array("code" => 0, "message" => "No se Encontró Ningún Usuario", "payload" => []);
         }
         return $response;
-    }   
-
+    }
     public static function getSelectUserJob(){
         try {
             $dates = [];
@@ -347,8 +333,7 @@ class all {
             $response = array("code" => -1, "message" => "problemas con mostrar la información", "payload" => $e->getMessage());
             return $response;
         }
-    }  
-    
+    }
     public static function getSelectProfiles(){
         try {
             $dates = [];
@@ -373,7 +358,6 @@ class all {
             return $response;
         }
     }
-
     public static function getSelectClients(){
         try {
             $dates = [];
@@ -397,8 +381,7 @@ class all {
             $response = array("code" => -1, "message" => "problemas con mostrar la información", "payload" => $e->getMessage());
             return $response;
         }
-    }  
-    
+    }
     public static function getSelectCategories(){
         try {
             $dates = [];
@@ -422,6 +405,5 @@ class all {
             $response = array("code" => -1, "message" => "problemas con mostrar la información", "payload" => $e->getMessage());
             return $response;
         }
-    }    
-    
+    }
 }

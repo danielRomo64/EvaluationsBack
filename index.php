@@ -22,7 +22,6 @@
             }
             http_response_code(405);
             break;
-
         case 'POST':
             $json = file_get_contents('php://input');
             $data = json_decode($json, true);
@@ -254,8 +253,8 @@
                     header('Content-Type: application/json');
                     echo json_encode(evaluation::dataGraphics($data['id_collaborator'], $data['date']));
                     break;
-                /*FIN  Evaluador*/
 
+                /*FIN  Evaluador*/
                     default:
                 http_response_code(400);
             }
@@ -334,14 +333,18 @@
                     header('Content-Type: application/json');
                     echo json_encode(user::updateUserJob($data['id']));
                     break;
-
                 /* Evaluador*/
                 case 'updateQuestion':
                     http_response_code(200);
                     header('Content-Type: application/json');
                     echo json_encode(evaluation::updateQuestion($data['id_log'],$data['user_id'], $data['evaluator_id'], $data['evaluated_range'], $data['feedback']));
                     break;
-                    
+                case 'updateDateEvaluation':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(evaluation::updateDateEvaluation($data['user_id'], $data['evaluator_id'], $data['date']));
+                    break;
+
                 /*FIN  Evaluador*/
                 default:
                 http_response_code(400);

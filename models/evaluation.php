@@ -21,7 +21,6 @@ class evaluation {
         }
 
     }
-
     public static function newPregunta($categoria, $user_pregunta, $user_inial, $user_final, $titulo){
         
         $connection = new Connection();
@@ -29,7 +28,7 @@ class evaluation {
 
         if ($db){
 
-            /* $query = "INSERT INTO questions(category_id, range_id, state_type, title, description) 
+            /* $query = "INSERT INTO questions(category_id, range_id, state_type, title, description)
             VALUES ('$category_id', '$range_id', '$state_type', '$title', '$description')"; */
 
             $query = "INSERT INTO preguntas(categoria_id, pregunta, rangoI, rangoF, state_type, titulo) 
@@ -47,7 +46,6 @@ class evaluation {
             return array("code" => -1, "message" => "Problemas con la BD", "payload" => "");              
         }
     }
-
     public static function questionCategory($category_id){
         $connection = new Connection();
         $db = $connection->connect();
@@ -71,7 +69,6 @@ class evaluation {
         }
         return $response;
     }
-
     public static function deleteQuestion($id){
 
         $dbConnection = new Connection();
@@ -96,7 +93,6 @@ class evaluation {
             return array("code" => -1, "message" => "Problemas con la BD", "payload" => "");
         }
     }
-
     public static function newCategories($description){
         
         $connection = new Connection();
@@ -113,7 +109,6 @@ class evaluation {
         http_response_code(404);
         return array("code" => 0, "message" => "Error al crear Categoria", "payload" => "");
     }
-
     public static function questionUser($question_id,$user_id,$evaluator_id,$evaluated_range,$feedback){
         $connection = new Connection();
         $db = $connection->connect();
@@ -129,7 +124,6 @@ class evaluation {
         http_response_code(404);
         return array("code" => 0, "message" => "Error al crear Valoración", "payload" => "");
     }
-
     public static function selectAllQuestion(){
         $connection = new Connection();
         $db = $connection->connect();
@@ -163,7 +157,6 @@ class evaluation {
         }
         return $response;
     }
-
     public static function getCollaboratorsEvaluator($id_evaluator){
         $connection = new Connection();
         $db = $connection->connect();
@@ -195,7 +188,6 @@ class evaluation {
         }
         return $response;
     }
-
     public static function validEvaluator($id_collaborator)
     {
         $dbConnection = new Connection();
@@ -228,7 +220,6 @@ class evaluation {
 
         //return $statement->rowC ount();
     }
-
     public static function startEvaluation($id_collaborator, $id_evaluator, $date)
     {
         $connection = new Connection();
@@ -288,8 +279,7 @@ class evaluation {
         } else {
             return array("code" => 0, "message" => "Evaluacion ya creada", "payload" => $insertedData);
         }
-    }    
-
+    }
     public static function validUserEvaluation($id_collaborator)
     {
         $dbConnection = new Connection();
@@ -312,7 +302,6 @@ class evaluation {
         }
         return $dates;
     }
-
     public static function updateUserDate($id_collaborator,$date)
     {
         $dbConnection = new Connection();
@@ -324,7 +313,6 @@ class evaluation {
 
         return $statement->rowCount();
     }
-
     public static function updateEvaluationHistory($id_collaborator, $id_evaluator, $date)
     {
         $dbConnection = new Connection();
@@ -335,8 +323,7 @@ class evaluation {
         $statement->execute();
 
         return $statement->rowCount();
-    }    
-
+    }
     public static function updateQuestion($id_log,$user_id,$evaluator_id,$evaluated_range,$feedback)
     {
         $dbConnection = new Connection();
@@ -356,7 +343,6 @@ class evaluation {
             return array("code" => 3, "message" => "Datos Erroneos", "payload" => "");
         }
     }
-
     public static function dataGraphics($id_collaborator, $date){
         $connection = new Connection();
         $db = $connection->connect();
@@ -393,7 +379,6 @@ class evaluation {
         }
         return $response;
     }
-
     public static function getEvaluation($id_collaborator)
     {
         $connection = new Connection();
@@ -430,7 +415,6 @@ class evaluation {
         }
         return $response;
     }
-
     public static function getNewEvaluation($id_collaborator, $id_evaluator, $validUserEvaluation = null){
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
@@ -469,8 +453,7 @@ class evaluation {
 
         return $response;
         //return $query;
-    }   
-
+    }
     public static function getAllEvaluation($id_collaborator){
         $connection = new Connection();
         $db = $connection->connect();
@@ -493,5 +476,31 @@ class evaluation {
             $response = array("code" => 0, "message" => "Evaluaciones no encontradas", "payload" => []);
         }
         return $response;
-    }   
+    }
+
+    public static function updateDateEvaluation($user_id,$evaluator_id,$date)
+    {
+        $dbConnection = new Connection();
+        $db = $dbConnection->connect();
+        if(!empty($user_id) && !empty($evaluator_id) && !empty($date)){
+            $query = "UPDATE `evaluation_history` SET `status` = '1' WHERE   `evaluation_history`.`id_user` = '$user_id' AND `evaluation_history`.`id_evaluator` = '$evaluator_id' AND `evaluation_history`.`date_evaluation` = '$date' ";
+            $statement = $db->prepare($query);
+            $statement->execute();
+
+            $newDate = date('Y-m-d', strtotime($date . ' +1 year'));
+            $updateUserDate = self::updateUserDate($user_id,$newDate);
+            if ($statement->rowCount() > 0 && $updateUserDate > 0 ) {
+                return array("code" => 1, "message" => "Evaluacion Finalizada", "payload" => "") ;
+            }else{
+                http_response_code(404);
+                return array("code" => 0, "message" => "Evaluacion no Modificada", "payload" => "");
+            }
+
+        }else {
+            http_response_code(404);
+            echo json_encode( array("code" => 0, "message" => "Datos Erroneos", "payload" => ""));
+        }
+
+
+    }
 }
