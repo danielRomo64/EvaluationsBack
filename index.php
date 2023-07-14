@@ -238,6 +238,11 @@
                     echo json_encode(evaluation::startEvaluation($data['id_collaborator'], $data['id_evaluator'], $data['date']));                    
                     //echo json_encode(evaluation::startEvaluation($data['id_collaborator'], $data['id_evaluator']));
                     break;
+                case 'startEvaluationNew':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(evaluation::startEvaluationNew($data['id_collaborator'], $data['id_evaluator'], $data['date']));
+                    break;
                 case 'getEvaluation':
                     http_response_code(200);
                     header('Content-Type: application/json');

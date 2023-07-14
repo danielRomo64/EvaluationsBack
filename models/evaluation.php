@@ -220,16 +220,74 @@ class evaluation {
 
         //return $statement->rowC ount();
     }
+
+    public static function startEvaluationValid($id_collaborator, $date)
+    {
+        $connection = new Connection();
+        $db = $connection->connect();
+
+        $activeQuery = "SELECT status FROM evaluation_history WHERE id_user = :id AND date_evaluation = :date;";
+        $statement = $db->prepare($activeQuery);
+        $statement->bindParam(':id', $id_collaborator, PDO::PARAM_INT);
+        $statement->bindParam(':date', $date, PDO::PARAM_STR);
+        $statement->execute();
+
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        $dates = $row ? ['status' => $row['status']] : false;
+
+        return $dates;
+    }
+
+    public static function startEvaluationNew($id_collaborator, $id_evaluator, $date)
+    {
+        $connection = new Connection();
+        $db = $connection->connect();
+        $startEvaluationValid = self::startEvaluationValid($id_collaborator, $date);
+        if ($startEvaluationValid) {
+            return array("code" => 0, "message" => "Ya existe una evaluación creada edítele o cierre la antes de continuar con una nueva ", "payload" => []);
+        } else {
+             try {
+
+                $query = "INSERT INTO evaluation_logs (question_id, user_id, evaluator_id, date)
+                        SELECT Q.id, " . $id_collaborator . ", " . $id_evaluator . ", '" . $date . "'
+                        FROM questions AS Q
+                        WHERE Q.state_type = 1 ;";
+
+                $statement = $db->prepare($query);
+                $statement->execute();
+
+                $insertedRows = $statement->rowCount();
+
+                $updateUserDate = self::updateUserDate($id_collaborator, $date);
+                $updateEvaluationHistory = self::updateEvaluationHistory($id_collaborator, $id_evaluator, $date);
+
+                $lastInsertId = $db->lastInsertId();
+                $selectQuery = "SELECT E.id,E.question_id, E.user_id,E.evaluator_id,E.evaluated_range,E.feedback,E.date,
+                                        C.id AS id_categorie, C.description AS categorie ,Q.title,Q.description,Q.minimum,Q.maximum
+                                        FROM evaluation_logs AS E  
+                                        INNER JOIN questions AS Q ON E.question_id = Q.id
+                                        INNER JOIN categories AS C ON C.id = Q.category_id
+                                        WHERE Q.state_type = 1 AND C.status = 1 AND E.id >= " . $lastInsertId;
+
+                $selectStatement = $db->prepare($selectQuery);
+                $selectStatement->execute();
+                $insertedData = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+
+                return array("code" => 1, "message" => "Eval
+                uacion creada exitosamente ", "payload" => $insertedData);
+            } catch (Exception $e) {
+                return array("code" => 0, "message" => "Se presento error. Por favor contacte al administrado.", "payload" => []);
+            }
+        }
+    }
     public static function startEvaluation($id_collaborator, $id_evaluator, $date)
     {
         $connection = new Connection();
         $db = $connection->connect();
 
-        $activeQuery = "SELECT * FROM evaluation_history AS E WHERE E.id_user = $id_collaborator AND E.date_evaluation = '$date' AND E.status = 1;";
-        $activeStatement = $db->prepare($activeQuery);
-        $activeStatement->execute();
+        $startEvaluationValid = self::startEvaluationValid($id_collaborator,$date);
 
-        if ($activeStatement->rowCount() == 0){
+        if ($startEvaluationValid['status'] == 0){
 
             $selectQuery = "SELECT E.id,E.question_id, E.user_id,E.evaluator_id,E.evaluated_range,E.feedback,E.date,
             C.id AS id_categorie, C.description AS categorie ,Q.title,Q.description,Q.minimum,Q.maximum
@@ -242,48 +300,7 @@ class evaluation {
             $selectStatement->execute();
             $insertedData = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 
-            //return array("code" => $selectStatement->rowCount(), "message" => "Evaluacion ya creada", "payload" => $insertedData);
-
-            if ($selectStatement->rowCount() < 1 ){
-
-                try{
-
-                    $query = "INSERT INTO evaluation_logs (question_id, user_id, evaluator_id, date)
-                        SELECT Q.id, " . $id_collaborator . ", " . $id_evaluator . ", '" . $date . "'
-                        FROM questions AS Q
-                        WHERE Q.state_type = 1 ;";
-
-                    $statement = $db->prepare($query);
-                    $statement->execute();
-
-                    $insertedRows = $statement->rowCount();
-
-                    $updateUserDate = self::updateUserDate($id_collaborator,$date);
-                    $updateEvaluationHistory = self::updateEvaluationHistory($id_collaborator, $id_evaluator,$date);
-
-                    $lastInsertId = $db->lastInsertId();
-                    $selectQuery = "SELECT E.id,E.question_id, E.user_id,E.evaluator_id,E.evaluated_range,E.feedback,E.date,
-                                        C.id AS id_categorie, C.description AS categorie ,Q.title,Q.description,Q.minimum,Q.maximum
-                                        FROM evaluation_logs AS E  
-                                        INNER JOIN questions AS Q ON E.question_id = Q.id
-                                        INNER JOIN categories AS C ON C.id = Q.category_id
-                                        WHERE Q.state_type = 1 AND C.status = 1 AND E.id >= " . $lastInsertId;
-
-                    $selectStatement = $db->prepare($selectQuery);
-                    $selectStatement->execute();
-                    $insertedData = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
-
-                    return array("code" => 1, "message" => "Evaluacion creada exitosamente ", "payload" => $insertedData);
-
-                }catch (Exception $e){
-
-                    return array("code" => 2, "message" => "Se presetó error en la BD. Por favor conacte al administrado.", "payload" => []);
-
-                }
-
-            } else {
-                return array("code" => 0, "message" => "Evaluacion ya creada", "payload" => $insertedData);
-            }
+                return array("code" => 1, "message" => "Evaluacion ya creada", "payload" => $insertedData);
         }else{
             return array("code" => 0, "message" => "Evaluacion ya finalizada", "payload" => []);
         }
@@ -485,7 +502,6 @@ class evaluation {
         }
         return $response;
     }
-
     public static function updateDateEvaluation($user_id,$evaluator_id,$date)
     {
         $dbConnection = new Connection();
