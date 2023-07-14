@@ -273,10 +273,9 @@ class evaluation {
                 $selectStatement->execute();
                 $insertedData = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 
-                return array("code" => 1, "message" => "Eval
-                uacion creada exitosamente ", "payload" => $insertedData);
+                return array("code" => 2, "message" => "Evaluacion creada exitosamente ", "payload" => $insertedData);
             } catch (Exception $e) {
-                return array("code" => 0, "message" => "Se presento error. Por favor contacte al administrado.", "payload" => []);
+                return array("code" => 1, "message" => "Se presento error. Por favor contacte al administrado.", "payload" => []);
             }
         }
     }
