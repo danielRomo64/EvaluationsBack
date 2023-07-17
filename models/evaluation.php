@@ -21,31 +21,6 @@ class evaluation {
         }
 
     }
-    public static function newPregunta($categoria, $user_pregunta, $user_inial, $user_final, $titulo){
-        
-        $connection = new Connection();
-        $db = $connection->connect();
-
-        if ($db){
-
-            /* $query = "INSERT INTO questions(category_id, range_id, state_type, title, description)
-            VALUES ('$category_id', '$range_id', '$state_type', '$title', '$description')"; */
-
-            $query = "INSERT INTO preguntas(categoria_id, pregunta, rangoI, rangoF, state_type, titulo) 
-            VALUES ('$categoria', '$user_pregunta', '$user_inial', '$user_final', 1, '$titulo')";                  
-
-            $statement = $db->prepare($query);
-            $statement->execute();
-
-            if ($statement->rowCount() > 0) {
-                return array("code" => 1, "message" => "Pregunta creada exitosamente", "payload" => "") ;
-            }else{
-                return array("code" => 0, "message" => "Error al crear pregunta", "payload" => "");            
-            }            
-        }else{
-            return array("code" => -1, "message" => "Problemas con la BD", "payload" => "");              
-        }
-    }
     public static function questionCategory($category_id){
         $connection = new Connection();
         $db = $connection->connect();
@@ -94,7 +69,7 @@ class evaluation {
         }
     }
     public static function newCategories($description){
-        
+
         $connection = new Connection();
         $db = $connection->connect();
 
@@ -220,7 +195,6 @@ class evaluation {
 
         //return $statement->rowC ount();
     }
-
     public static function startEvaluationValid($id_collaborator, $date)
     {
         $connection = new Connection();
@@ -237,7 +211,6 @@ class evaluation {
 
         return $dates;
     }
-
     public static function startEvaluationNew($id_collaborator, $id_evaluator, $date)
     {
         $connection = new Connection();
