@@ -325,7 +325,7 @@ class evaluation {
     {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
-        if(!empty($id_log)  && !empty($user_id) && !empty($evaluator_id) && !empty($evaluated_range) && !empty($feedback)){
+        if(!empty($id_log)  && !empty($user_id) && !empty($evaluator_id)){
             $query = "UPDATE `evaluation_logs` SET `evaluated_range` = '$evaluated_range', `feedback` = '$feedback' , `evaluator_id` = '$evaluator_id' WHERE `evaluation_logs`.`id` = '$id_log' AND `evaluation_logs`.`user_id` = '$user_id'";
             $statement = $db->prepare($query);
             $statement->execute();
