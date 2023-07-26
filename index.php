@@ -258,6 +258,11 @@
                     header('Content-Type: application/json');
                     echo json_encode(evaluation::dataGraphics($data['id_collaborator'], $data['date']));
                     break;
+                case 'validStartEvaluation':
+                    http_response_code(200);
+                    header('Content-Type: application/json');
+                    echo json_encode(evaluation::validStartEvaluation($data['id_collaborator'], $data['date'], $data['id_evaluator']));
+                    break;
                 /*FIN  Evaluador*/
                     default:
                 http_response_code(400);

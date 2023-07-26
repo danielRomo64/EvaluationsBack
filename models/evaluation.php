@@ -315,7 +315,7 @@ class evaluation {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
 
-        $querydate = "INSERT INTO `evaluation_history` (`id_user`, `id_evaluator`, `date_evaluation`) VALUES ( '$id_collaborator', '$id_evaluator', '$date');";
+        $querydate = "INSERT INTO `evaluation_history` (`id_user`, `id_evaluator`, `date_evaluation`, `status`) VALUES ( '$id_collaborator', '$id_evaluator', '$date','0');";
         $statement = $db->prepare($querydate);
         $statement->execute();
 
@@ -485,18 +485,42 @@ class evaluation {
 
             $newDate = date('Y-m-d', strtotime($date . ' +1 year'));
             $updateUserDate = self::updateUserDate($user_id,$newDate);
-            if ($statement->rowCount() > 0 && $updateUserDate > 0 ) {
-                return array("code" => 1, "message" => "Evaluacion Finalizada", "payload" => "") ;
+            if ($statement->rowCount() > 0 ) {
+                if($updateUserDate > 0){
+                    return array("code" => 1, "message" => "Actualizacion fecha usuario y evaluacion cerrada", "payload" => "") ;
+                  }else{
+                    return array("code" => 2, "message" => "Evaluacion cerrada, Fecha de usuario no actualizada", "payload" => "") ;
+                }
             }else{
                 http_response_code(404);
-                return array("code" => 0, "message" => "Evaluacion no Modificada", "payload" => "");
+                return array("code" => 3, "message" => "Evaluacion no Modificada o datos no encontrados", "payload" => "");
             }
 
         }else {
             http_response_code(404);
-            echo json_encode( array("code" => 0, "message" => "Datos Erroneos", "payload" => ""));
+            echo json_encode( array("code" => 0, "message" => "Datos Erroneos o incompletos", "payload" => ""));
         }
 
 
     }
+    public static function validStartEvaluation($id_collaborator, $date , $id_evaluator)
+    {
+        if(!empty($id_collaborator) && !empty($date)) {
+            $startEvaluationValid = self::startEvaluationValid($id_collaborator, $date);
+            if ($startEvaluationValid) {
+                if ($startEvaluationValid['status'] == 0) {
+                    return array("code" => 1, "message" => "Evaluacion Abierta", "payload" => []);
+                } else {
+                    return array("code" => 2, "message" => "Evaluacion Finalizada", "payload" => []);
+                }
+            } else {
+                return array("code" => 0, "message" => "Evaluacion no encontrada", "payload" => []);
+            }
+        }else{
+            return array("code" => 0, "message" => "Datos Erroneos" , "payload" => []);
+        }
+    }
+
+
+
 }
