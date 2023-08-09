@@ -1,0 +1,8 @@
+
+Fatal error: Uncaught Error: Call to undefined function each() in C:\Users\Dell\AppData\Roaming\Sublime Text 3\Packages\PHPTools\php.tools\codeFormatter.php:54
+Stack trace:
+#0 C:\Users\Dell\AppData\Roaming\Sublime Text 3\Packages\PHPTools\php.tools\codeFormatter.php(41): AddMissingCurlyBraces->addBraces('<?php\r\necho '<t...')
+#1 C:\Users\Dell\AppData\Roaming\Sublime Text 3\Packages\PHPTools\php.tools\codeFormatter.php(326): AddMissingCurlyBraces->format('<?php\r\necho '<t...')
+#2 C:\Users\Dell\AppData\Roaming\Sublime Text 3\Packages\PHPTools\php.tools\codeFormatter.php(1736): CodeFormatter->formatCode('<?php\r\necho '<t...')
+#3 {main}
+  thrown in C:\Users\Dell\AppData\Roaming\Sublime Text 3\Packages\PHPTools\php.tools\codeFormatter.php on line 54

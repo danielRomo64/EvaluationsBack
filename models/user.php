@@ -244,7 +244,7 @@ class User {
         $db = $connection->connect();
         $dates = [];
 
-        $query = $db->query("SELECT U.id, if(u.status != 1, 'inactivo', 'activo') AS status, U.description FROM user_job AS U");
+        $query = $db->query("SELECT U.id, if(U.status != 1, 'inactivo', 'activo') AS status, U.description FROM user_job AS U");
 
         if ($query->rowCount() > 0) {
             while ($row = $query->fetch(PDO::FETCH_ASSOC)) {

@@ -345,13 +345,18 @@ class evaluation {
         $db = $connection->connect();
         $dates = [];
 
-        $query = $db->query("SELECT L.id,C.description AS category,Q.category_id, L.evaluated_range,Q.title,Q.description AS question,Q.minimum,Q.maximum,L.date, feedback, 
-                            concat(U.first_name, ' ', U.last_name) as name
-                            FROM evaluation_logs AS L
-                            INNER JOIN questions AS Q ON Q.id = L.question_id AND Q.state_type = 1
-                            INNER JOIN categories AS C ON C.id = Q.category_id
-                            INNER JOIN user AS U ON U.id_user = '$id_collaborator'                         
-                            WHERE L.user_id = '$id_collaborator'  AND YEAR(L.date) = '$date'");
+        $query = $db->query("SELECT    L.id,    C.description AS category,    Q.category_id,    L.evaluated_range,    Q.title,    Q.description AS question,    Q.minimum,    Q.maximum,    L.date,    feedback,    CONCAT(U.first_name, ' ', U.last_name) AS name,
+                                        ( SELECT CONCAT(E.first_name, ' ', E.last_name)        FROM user AS E        WHERE E.id_user = (            SELECT R.id_evaluator            FROM user_relations AS R            WHERE R.id_user = U.id_user        )    ) AS evaluator,
+                                        ( SELECT J.description FROM user_job AS J WHERE J.id = U.user_job   ) AS job, 
+                                        ( SELECT T.description FROM  user_relations AS R INNER JOIN clients AS T ON T.id = R.id_client WHERE R.id_user = '$id_collaborator') AS client
+                                    FROM
+                                        evaluation_logs AS L
+                                        INNER JOIN questions AS Q ON Q.id = L.question_id AND Q.state_type = 1
+                                        INNER JOIN categories AS C ON C.id = Q.category_id
+                                        INNER JOIN user AS U ON U.id_user = '$id_collaborator'
+                                    WHERE
+                                        L.user_id = '$id_collaborator'
+                                        AND YEAR(L.date) = '$date';");
 
         if ($query->rowCount() > 0) {
             while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -366,7 +371,11 @@ class evaluation {
                     'feedback' => $row['feedback'],                    
                     'minimum' => $row['minimum'],
                     'maximum' => $row['maximum'],
-                    'date' => $row['date']
+                    'date' => $row['date'],
+                    'evaluator' => $row['evaluator'],
+                    'job' => $row['job'],
+                    'client' => $row['client']
+
                 ];
             }
             $response = array("code" => 1, "message" => "Rangos encontradas", "payload" => $dates);
