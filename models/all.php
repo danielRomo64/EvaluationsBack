@@ -121,7 +121,7 @@ class all {
                 return array("code" => 0, "message" => "Perfiles no actualizado", "payload" => "");
             }            
         }else {
-            echo json_encode( array("code" => 2, "message" => "Datos Erroneos", "payload" => ""));
+            echo array("code" => 2, "message" => "Datos Erroneos", "payload" => "");
         }
 
 
