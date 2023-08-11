@@ -350,11 +350,11 @@ class all {
                 $response = array("code" => 1, "message" => "Datos encontrados", "payload" => $dates);
                 return $response;
             } else {
-                $response = array("code" => -1, "message" => "Ningun dato activo o encontrado", "payload" => "");
+                $response = array("code" => 1, "message" => "Ningun dato activo o encontrado", "payload" => "");
                 return $response;
             }
         } catch (exception $e) {
-            $response = array("code" => -1, "message" => "problemas con mostrar la información", "payload" => $e->getMessage());
+            $response = array("code" => 1, "message" => "problemas con mostrar la información", "payload" => $e->getMessage());
             return $response;
         }
     }
