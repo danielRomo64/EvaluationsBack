@@ -115,7 +115,7 @@ class User {
     {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
-        if(!empty($id_user) && !empty($user_email) && !empty($first_name) && !empty($last_name) && !empty($user_profile) && !empty($user_evaluation_date)  && !empty($user_job)  && !empty($id_client)  && !empty($id_evaluator) ){
+        if(!empty($id_user) && !empty($user_email) && !empty($first_name) && !empty($last_name) && !empty($user_profile) && !empty($user_evaluation_date)  /*&& !empty($user_job)  && !empty($id_client)  && !empty($id_evaluator)*/ ){
             $query = "UPDATE `user` SET `user_login` = '$user_email', `user_email` = '$user_email', `first_name` = '$first_name', `last_name` = '$last_name', `user_profile` = '$user_profile', `user_evaluation_date` = '$user_evaluation_date', `user_job` = '$user_job' WHERE `user`.`id_user` = '$id_user'";
             $statement = $db->prepare($query);
             $statement->execute();
