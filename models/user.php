@@ -115,7 +115,7 @@ class User {
     {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
-        if(!empty($id_user) && !empty($user_email) && !empty($first_name) && !empty($last_name) && !empty($user_profile) && !empty($user_evaluation_date)  /*&& !empty($user_job)  && !empty($id_client)  && !empty($id_evaluator)*/ ){
+        if(!empty($id_user) && !empty($user_email) && !empty($first_name) && !empty($last_name) && !empty($user_profile) && !empty($user_evaluation_date) ){
             $query = "UPDATE `user` SET `user_login` = '$user_email', `user_email` = '$user_email', `first_name` = '$first_name', `last_name` = '$last_name', `user_profile` = '$user_profile', `user_evaluation_date` = '$user_evaluation_date', `user_job` = '$user_job' WHERE `user`.`id_user` = '$id_user'";
             $statement = $db->prepare($query);
             $statement->execute();
@@ -124,11 +124,11 @@ class User {
             if (($statement->rowCount() > 0) || ($updateRelations > 0)){
                 return array("code" => 1, "message" => "Actualización exitosa.", "payload" => "");                
             }else{
-                return array("code" => 1, "message" => "No hubo cambios que actualizar en la BD", "payload" => ""); 
+                return array("code" => 2, "message" => "No hubo cambios que actualizar en la BD", "payload" => "");
             }
 
         }else{
-            return array("code" => 3, "message" => "Datos Erroneos", "payload" => "");
+            return array("code" => 0, "message" => "Datos Erroneos", "payload" => "");
         }
     }
     public static function updateUserRelations($id_user,$id_client,$id_evaluator)
