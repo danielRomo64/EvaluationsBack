@@ -350,6 +350,7 @@ class evaluation {
                             concat(U.first_name, ' ', U.last_name) as name,
                             (SELECT J.description FROM user_relations as R INNER JOIN user_job as J ON J.id = R.id_client WHERE R.id_user ='$id_collaborator') AS job,
                             (SELECT C.description FROM user_relations as R INNER JOIN clients  AS  C ON C.id = R.id_client WHERE R.id_user ='$id_collaborator') AS client,
+                            
                             (SELECT CONCAT(E.first_name,' ',E.last_name) FROM user_relations as R INNER JOIN user  AS  E ON E.id_user = R.id_evaluator WHERE R.id_user ='34') AS evaluator
                             FROM evaluation_logs AS L
                             INNER JOIN questions AS Q ON Q.id = L.question_id AND Q.state_type = 1

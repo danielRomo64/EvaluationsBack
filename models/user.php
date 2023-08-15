@@ -136,7 +136,7 @@ class User {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
 
-        $query = "UPDATE `user_relations` SET `id_client` = '$id_client', `id_evaluator` = '$id_evaluator'  
+        $query = "UPDATE `user_relations` SET `id_client` = '$id_client', `id_evaluator` = '$id_evaluator' 
         WHERE `user_relations`.`id_user` = '$id_user'";
 
         $statement = $db->prepare($query);
