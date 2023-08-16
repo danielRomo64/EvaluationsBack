@@ -81,8 +81,8 @@ class User {
             $query = $db->query("SELECT U.id_user, U.first_name, U.last_name, U.user_email, U.user_login,  U.user_status ,U.user_profile, C.id AS client , U.user_registered, U.user_evaluation_date, U.user_job,
                                         R.id_evaluator
                                         FROM user as U
-                                        INNER JOIN user_relations AS R ON U.id_user = R.id_user
-                                        INNER JOIN clients as C on R.id_client = C.id  WHERE U.id_user = '$id_user'");
+                                        LEFT JOIN user_relations AS R ON U.id_user = R.id_user
+                                        LEFT JOIN clients as C on R.id_client = C.id  WHERE U.id_user = '$id_user'");
 
             if ($query->rowCount() > 0) {
                 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
