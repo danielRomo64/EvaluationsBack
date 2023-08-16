@@ -44,8 +44,8 @@ class User {
                                         FROM user as U
                                         INNER JOIN profiles as P on U.user_profile = P.id
                                         INNER JOIN user_relations AS R ON U.id_user = R.id_user
-                                        INNER JOIN clients as C on R.id_client = C.id 
-                                        INNER JOIN user_job AS J ON U.user_job = J.id");
+                                        LEFT JOIN clients as C on R.id_client = C.id 
+                                        LEFT JOIN user_job AS J ON U.user_job = J.id");
 
             while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                 $dates[] = [
