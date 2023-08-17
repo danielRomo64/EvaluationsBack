@@ -515,15 +515,14 @@ class evaluation {
     {
         if(!empty($id_collaborator) && !empty($date)) {
             $startEvaluationValid = self::startEvaluationValid($id_collaborator, $date);
+
             if ($startEvaluationValid['status'] === false) {
-                if ($startEvaluationValid['status'] === 0) {
-                    return array("code" => 1, "message" => "Evaluacion Abierta", "payload" => []);
-                } else {
-                    return array("code" => 2, "message" => "Evaluacion Finalizada", "payload" => []);
-                }
+                return array("code" => 1, "message" => "Evaluacion no encontrada", "payload" => []);
+            } else if ($startEvaluationValid['status'] === 0) {
+                return array("code" => 3, "message" => "Evaluacion Abierta", "payload" => []);
             } else {
-                return array("code" => 0, "message" => "Evaluacion no encontrada", "payload" => []);
-            }
+            return array("code" => 2, "message" => "Evaluacion Finalizada", "payload" => []);
+        }
         }else{
             return array("code" => 0, "message" => "Datos Erroneos" , "payload" => []);
         }
