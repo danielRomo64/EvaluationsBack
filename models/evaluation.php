@@ -207,7 +207,7 @@ class evaluation {
         $statement->execute();
 
         $row = $statement->fetch(PDO::FETCH_ASSOC);
-        $dates = $row ? ['status' => $row['status']] : false;
+        $dates = $row ? ['status' => $row['status']] :  ['status' => false] ;
 
         return $dates;
     }
@@ -216,10 +216,7 @@ class evaluation {
         $connection = new Connection();
         $db = $connection->connect();
         $startEvaluationValid = self::startEvaluationValid($id_collaborator, $date);
-
-        if ($startEvaluationValid['status'] == 0) {
-            return array("code" => 0, "message" => "Ya existe una evaluación creada edítele o cierre la antes de continuar con una nueva ", "payload" => []);
-        } else if($startEvaluationValid['status'] == 1) {
+        if($startEvaluationValid['status'] === false || $startEvaluationValid['status'] === 1 ) {
              try {
 
                 $query = "INSERT INTO evaluation_logs (question_id, user_id, evaluator_id, date)
@@ -251,7 +248,9 @@ class evaluation {
             } catch (Exception $e) {
                 return array("code" => 1, "message" => "Se presento error. Por favor contacte al administrado.", "payload" => []);
             }
-        }
+        }else if ($startEvaluationValid['status'] === 0) {
+        return array("code" => 0, "message" => "Ya existe una evaluación creada edítele o cierre la antes de continuar con una nueva ", "payload" => []);
+    }
     }
     public static function startEvaluation($id_collaborator, $id_evaluator, $date)
     {
