@@ -515,8 +515,8 @@ class evaluation {
     {
         if(!empty($id_collaborator) && !empty($date)) {
             $startEvaluationValid = self::startEvaluationValid($id_collaborator, $date);
-            if ($startEvaluationValid) {
-                if ($startEvaluationValid['status'] == 0) {
+            if ($startEvaluationValid['status'] === false) {
+                if ($startEvaluationValid['status'] === 0) {
                     return array("code" => 1, "message" => "Evaluacion Abierta", "payload" => []);
                 } else {
                     return array("code" => 2, "message" => "Evaluacion Finalizada", "payload" => []);
