@@ -259,7 +259,7 @@ class evaluation {
 
         $startEvaluationValid = self::startEvaluationValid($id_collaborator,$date);
 
-        if ($startEvaluationValid['status'] == 0){
+        if ($startEvaluationValid['status'] === 0){
 
             $selectQuery = "SELECT E.id,E.question_id, E.user_id,E.evaluator_id,E.evaluated_range,E.feedback,E.date,
             C.id AS id_categorie, C.description AS categorie ,Q.title,Q.description,Q.minimum,Q.maximum
@@ -272,9 +272,11 @@ class evaluation {
             $selectStatement->execute();
             $insertedData = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 
-                return array("code" => 1, "message" => "Evaluacion ya creada", "payload" => $insertedData);
+                return array("code" => 2, "message" => "Evaluacion ya creada", "payload" => $insertedData);
+        }else if ($startEvaluationValid['status'] === 1){
+            return array("code" => 1, "message" => "Evaluacion ya finalizada", "payload" => []);
         }else{
-            return array("code" => 0, "message" => "Evaluacion ya finalizada", "payload" => []);
+            return array("code" => 0, "message" => "Evaluacion no encontrada", "payload" => []);
         }
     }
     public static function validUserEvaluation($id_collaborator)
