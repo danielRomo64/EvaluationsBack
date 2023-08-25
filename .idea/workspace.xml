@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e55d232a-22ae-4fce-9cd3-0c06eb0f904c" name="Changes" comment="jk" />
+    <list default="true" id="e55d232a-22ae-4fce-9cd3-0c06eb0f904c" name="Changes" comment="jk">
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/connection/connection.php" beforeDir="false" afterPath="$PROJECT_DIR$/connection/connection.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/all.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/all.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/evaluation-05-02.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/evaluation-nuevo.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/evaluation.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/evaluation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/firebase/php-jwt" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/firebase/php-jwt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,7 +26,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:\xampp\php\php.exe" />
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:\xampp\php\php.exe">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/firebase/php-jwt" />
+    </include_path>
+  </component>
   <component name="ProjectId" id="2PwpPVaXfqeYXEcb92VYp28shzw" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -49,6 +63,7 @@
       <workItem from="1684377978633" duration="10974000" />
       <workItem from="1684442161485" duration="74905000" />
       <workItem from="1685553587501" duration="117000" />
+      <workItem from="1692980052923" duration="9494000" />
     </task>
     <servers />
   </component>

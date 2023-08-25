@@ -170,28 +170,32 @@ class evaluation {
         $dates = [];
 
         $validEvaluator = self::validEvaluator($id_evaluator);
-        if ((strpos(strtolower($validEvaluator['description']), 'eliza') !== false)||(strpos(strtolower($validEvaluator['description']), 'admin') !== false)){
-            $whereEvaluator = "";
-        }else{
-            $whereEvaluator = "U.id_user IN (SELECT R.id_user FROM user_relations AS R WHERE R.id_evaluator = '$id_evaluator' ) AND";
-        }
-
-        $query = $db->query("SELECT U.id_user, CONCAT(U.first_name,' ',U.last_name) AS name, U.user_registered , U.user_evaluation_date, C.description FROM user AS U INNER JOIN profiles AS P ON P.id = U.user_profile INNER JOIN user_relations AS T ON T.id_user = U.id_user INNER JOIN clients AS C ON C.id = T.id_client  WHERE $whereEvaluator U.user_status = 1 AND P.status = 1 AND P.description = 'Colaborador';");
-
-        if ($query->rowCount() > 0) {
-            while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                $dates[] = [
-                    'id_user' => $row['id_user'],
-                    'name' => $row['name'],
-                    'user_registered' => $row['user_registered'],
-                    'user_evaluation_date' => $row['user_evaluation_date'],
-                    'description' => $row['description']
-                ];
+        if ($validEvaluator !== false){
+            if ((strpos(strtolower($validEvaluator['description']), 'elisa') !== false)||(strpos(strtolower($validEvaluator['profile']), 'administrador') !== false)){
+                $whereEvaluator = "";
+            }else{
+                $whereEvaluator = "U.id_user IN (SELECT R.id_user FROM user_relations AS R WHERE R.id_evaluator = '$id_evaluator' ) AND";
             }
-            $response = array("code" => 1, "message" => "Colaboradores Encontrados", "payload" => $dates);
-        }else {
-            http_response_code(404);
-            $response = array("code" => 0, "message" => "Colaboradores no encontrados", "payload" => []);
+            $query = $db->query("SELECT U.id_user, CONCAT(U.first_name,' ',U.last_name) AS name, U.user_registered , U.user_evaluation_date, C.description FROM user AS U INNER JOIN profiles AS P ON P.id = U.user_profile INNER JOIN user_relations AS T ON T.id_user = U.id_user INNER JOIN clients AS C ON C.id = T.id_client  WHERE $whereEvaluator U.user_status = 1 AND P.status = 1 AND P.description = 'Colaborador';");
+
+            if ($query->rowCount() > 0) {
+                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                    $dates[] = [
+                        'id_user' => $row['id_user'],
+                        'name' => $row['name'],
+                        'user_registered' => $row['user_registered'],
+                        'user_evaluation_date' => $row['user_evaluation_date'],
+                        'description' => $row['description']
+                    ];
+                }
+                $response = array("code" => 1, "message" => "Colaboradores Encontrados", "payload" => $dates);
+            }else {
+                http_response_code(404);
+                $response = array("code" => 0, "message" => "Colaboradores no encontrados", "payload" => []);
+            }
+
+        }else{
+            $response = array("code" => -1, "message" => "Evaluador no encontrados", "payload" => []);
         }
         return $response;
     }
@@ -200,28 +204,31 @@ class evaluation {
     {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
-
-        $query = "SELECT U.id AS id_user, C.description, C.id fROM user_relations AS U  
-                        INNER JOIN clients AS C ON C.id = U.id_client
-                        WHERE U.id_user = '$id_collaborator' AND C.status = 1;";
-        $statement = $db->prepare($query);
-        $statement->execute();
         $dates = [];
-        if ($statement->rowCount() > 0) {
-            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+
+        $query = $db->query( " SELECT U.id AS id_user, C.description, C.id, 
+                                        (SELECT P.description FROM profiles AS P WHERE P.id = R.user_profile) AS profile 
+                                        FROM (SELECT $id_collaborator AS id_user) AS dummy 
+                                        LEFT JOIN user_relations AS U ON dummy.id_user = U.id_user
+                                        LEFT JOIN clients AS C ON C.id = U.id_client AND C.status = 1
+                                        LEFT JOIN user AS R ON U.id_user = R.id_user
+                                        WHERE U.id_user IS NULL OR U.id_user = $id_collaborator; ");
+
+        if ($query->rowCount() > 0) {
+            while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                 $dates = [
                     'id_user' => $row['id_user'],
                     'description' => $row['description'],
-                    'id' => $row['id']
+                    'id' => $row['id'],
+                    'profile' => $row['profile']
+
                 ];
             }
 
         }else {
-            $dates = FALSE;
+            $dates = false;
         }
         return $dates;
-
-        //return $statement->rowC ount();
     }
 
     public static function startEvaluationValid($id_collaborator, $date)

@@ -306,6 +306,7 @@ class all {
 
         $query = $db->query("SELECT U.id_user, C.description, CONCAT(U.first_name,' ',U.last_name) AS name, U.user_evaluation_date 
                             FROM user AS U 
+                            INNER JOIN profiles AS P on U.user_profile = P.id AND P.description = 'Colaborador'
                             INNER JOIN user_relations AS R ON R.id_user = U.id_user                             
                             INNER JOIN clients AS C ON C.id = R.id_client  
                             WHERE  $where $whereYear $whereDay");

@@ -6,7 +6,7 @@
         {
             $opciones = [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"];
             try {
-                $db = new PDO('mysql:host=localhost;dbname=evaluacion', 'root', 'root', $opciones);
+                $db = new PDO('mysql:host=localhost;dbname=evaluacion', 'root', '', $opciones);
                 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 return $db;
             } catch (PDOException $e) {
