@@ -51,10 +51,13 @@ class login {
             return array("code" => 0, "message" => "Usuario no encontrado", "payload" => "");
         }
     }
+
     private static function generateJWT($payload) {
         $jwtSecretKey = 'your_secret_key';
         $jwtAlgorithm = 'HS256';
         $jwt = \Firebase\JWT\JWT::encode($payload, $jwtSecretKey, $jwtAlgorithm);
         return $jwt;
     }
+
+
 }

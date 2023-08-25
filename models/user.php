@@ -2,13 +2,12 @@
 
 require_once "connection/Connection.php";
 class User {
+
     public static function newUser($user_pass, $user_email, $first_name, $last_name, $user_profile, $user_registered,$user_evaluation_date,$user_job,$id_client,$id_evaluator) {
         $connection = new Connection();
         $db = $connection->connect();
 
-
         $valid = self::validUser($user_email);
-
 
         if ($valid){
             $query = "INSERT INTO `user` ( `user_login`, `user_pass`, `user_email`, `user_registered`, `user_status`, `first_name`, `last_name`, `user_profile`, `user_evaluation_date`, `user_job`) 
@@ -33,6 +32,7 @@ class User {
         http_response_code(404);
         return array("code" => 0, "message" => "Usuario no Creado", "payload" => "");
     }
+
     public static function getAllUser($id_user = null) {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
@@ -71,6 +71,7 @@ class User {
 
         return $response;
     }
+
     public static function getUser($id_user) {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
@@ -111,6 +112,7 @@ class User {
         return $response;
 
     }
+
     public static function updateUser($id_user, $user_email, $first_name, $last_name, $user_profile, $user_evaluation_date,$user_job,$id_client,$id_evaluator)
     {
         $dbConnection = new Connection();
@@ -130,8 +132,9 @@ class User {
         }else{
             return array("code" => 0, "message" => "Datos Erroneos", "payload" => "");
         }
-    }
-    public static function updateUserRelations($id_user,$id_client,$id_evaluator)
+    }  
+
+    public static function updateUserRelations($id_user, $id_client, $id_evaluator)
     {
         $dbConnection = new Connection();
         $db = $dbConnection->connect();
@@ -143,7 +146,8 @@ class User {
         $statement->execute();
 
         return $statement->rowCount();
-    }
+    }    
+    
     public static function deleteUser($id_user) {
         
         $dbConnection = new Connection();
@@ -170,7 +174,8 @@ class User {
         }else{
             return json_encode( array("code" => -1, "message" => "Problemas de conexión a BD", "payload" => ""));
         }
-    }
+    }   
+    
     public  static  function validUser($user_email){
         $connection = new Connection();
         $db = $connection->connect();
@@ -184,9 +189,8 @@ class User {
         }else{
             return true;
         }
+    }    
 
-
-    }
     public  static  function validUserUpdate($user_email, $id){
         $connection = new Connection();
         $db = $connection->connect();
@@ -200,7 +204,8 @@ class User {
         }else{
             return false;
         }
-    }
+    }    
+
     public static function updatePass($user, $pass)
     {
         $dbConnection = new Connection();
@@ -225,6 +230,7 @@ class User {
             }
         } 
     }
+    
     public  static  function validUserPass($user, $pass){
         $connection = new Connection();
         $db = $connection->connect();
@@ -238,13 +244,14 @@ class User {
         }else{
             return true;
         }
-    }
+    }    
+
     public static function getUserJob(){
         $connection = new Connection();
         $db = $connection->connect();
         $dates = [];
 
-        $query = $db->query("SELECT U.id, if(U.status != 1, 'inactivo', 'activo') AS status, U.description FROM user_job AS U");
+        $query = $db->query("SELECT U.id, if(u.status != 1, 'inactivo', 'activo') AS status, U.description FROM user_job AS U");
 
         if ($query->rowCount() > 0) {
             while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -260,7 +267,8 @@ class User {
             $response = array("code" => 0, "message" => "Cargos usuario no encontradas", "payload" => []);
         }
         return $response;
-    }
+    }   
+    
     public  static  function insertUserRelations($idUserNew,$id_client,$id_evaluator){
         $connection = new Connection();
         $db = $connection->connect();
@@ -278,6 +286,7 @@ class User {
             return true;
         }
     }
+
     public static function getEvaluators(){
         $connection = new Connection();
         $db = $connection->connect();
@@ -304,6 +313,7 @@ class User {
         }
         return $response;
     }
+
     public static function newUserJob($description) {
         $connection = new Connection();
         $db = $connection->connect();
@@ -332,6 +342,7 @@ class User {
         http_response_code(404);
         return array("code" => 0, "message" => "Cargo no Creado", "payload" => "");
     }
+
     public static function updateUserJob($id)
     {
         $dbConnection = new Connection();
@@ -357,3 +368,4 @@ class User {
         }
     }    
 }
+/*  */

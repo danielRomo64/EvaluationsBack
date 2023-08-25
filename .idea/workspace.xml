@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9a89d5ea-9f85-4326-b1c5-67143b0a8e16" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/evaluation.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/evaluation.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/firebase/php-jwt" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/firebase/php-jwt" afterDir="false" />
-    </list>
+    <list default="true" id="e55d232a-22ae-4fce-9cd3-0c06eb0f904c" name="Changes" comment="jk" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,28 +17,19 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/models/all.php" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" />
-  </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:\xampp\php\php.exe">
-    <include_path>
-      <path value="$PROJECT_DIR$/vendor/composer" />
-      <path value="$PROJECT_DIR$/vendor/firebase/php-jwt" />
-    </include_path>
-  </component>
-  <component name="ProjectId" id="2STips9Ta31KTPpct4EjufPl2Sj" />
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:\xampp\php\php.exe" />
+  <component name="ProjectId" id="2PwpPVaXfqeYXEcb92VYp28shzw" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/xampp/htdocs/evaluacion&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/xampp/htdocs/evaluation&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -54,17 +41,14 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="9a89d5ea-9f85-4326-b1c5-67143b0a8e16" name="Changes" comment="" />
-      <created>1689177157381</created>
+      <changelist id="e55d232a-22ae-4fce-9cd3-0c06eb0f904c" name="Changes" comment="" />
+      <created>1684377976839</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1689177157381</updated>
-      <workItem from="1689177158389" duration="27134000" />
-      <workItem from="1689341047799" duration="15268000" />
-      <workItem from="1690206220344" duration="3000" />
-      <workItem from="1690206253960" duration="49846000" />
-      <workItem from="1691588133722" duration="19721000" />
-      <workItem from="1692020653122" duration="31245000" />
+      <updated>1684377976839</updated>
+      <workItem from="1684377978633" duration="10974000" />
+      <workItem from="1684442161485" duration="74905000" />
+      <workItem from="1685553587501" duration="117000" />
     </task>
     <servers />
   </component>
